@@ -1,5 +1,5 @@
 import Entity from '../../interface/entity';
-import Canvas from '../canvas'
+import Canvas from '../canvas';
 
 class Abstract implements Entity {
     protected canvas: Canvas;
@@ -10,8 +10,8 @@ class Abstract implements Entity {
         this.canvas = canvas;
         this.canvas.add(this);
 
-        this.x = 0;
-        this.y = 0;
+        this.x = 40;
+        this.y = 40;
     }
     draw():Entity {
         return this;

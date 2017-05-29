@@ -15,7 +15,7 @@ export default class Keyboard {
         this.body.addEventListener('keydown', this.listener.bind(this));
     }
 
-    onKey(name: string, cb: () => {}):Keyboard {
+    onKey(name: string, cb: () => any):Keyboard {
         this.events[name] = this.events[name] || [];
         this.events[name].push(cb);
 

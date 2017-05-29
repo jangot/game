@@ -1,11 +1,19 @@
 import AbstractEntity from './abstract';
+import Canvas from '../canvas'
 
 class Man extends AbstractEntity {
+    private ariaSize: number;
+
+    constructor(canvas: Canvas) {
+        super(canvas);
+
+        this.ariaSize = 10;
+    }
     draw() {
         let context = this.canvas.getContext();
 
         context.beginPath();
-        context.arc(this.x, this.y, 20, 0, 2 * Math.PI, false);
+        context.arc(this.x, this.y, this.ariaSize, 0, 2 * Math.PI, false);
         context.fillStyle = 'green';
         context.fill();
         context.lineWidth = 1;
@@ -16,7 +24,10 @@ class Man extends AbstractEntity {
     }
     addX(x: number): Man {
         let newX = this.x + x;
-        if (newX < 0 || newX > this.canvas.width) {
+        let leftBorder = this.ariaSize;
+        let rightBorder = this.canvas.width - this.ariaSize;
+
+        if (newX < leftBorder || newX > rightBorder) {
             return this;
         }
 
@@ -26,7 +37,10 @@ class Man extends AbstractEntity {
 
     addY(y: number): Man {
         let newY = this.y + y;
-        if (newY < 0 || newY > this.canvas.height) {
+        let topBorder = this.ariaSize;
+        let bottomBorder = this.canvas.height - this.ariaSize;
+
+        if (newY < topBorder || newY > bottomBorder) {
             return this;
         }
         this.y = newY;
