@@ -5,10 +5,10 @@ class Man extends AbstractEntity {
         let context = this.canvas.getContext();
 
         context.beginPath();
-        context.arc(this.x, this.y, 50, 0, 2 * Math.PI, false);
+        context.arc(this.x, this.y, 20, 0, 2 * Math.PI, false);
         context.fillStyle = 'green';
         context.fill();
-        context.lineWidth = 5;
+        context.lineWidth = 1;
         context.strokeStyle = '#003300';
         context.stroke();
 
