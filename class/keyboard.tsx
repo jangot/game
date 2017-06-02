@@ -5,6 +5,7 @@ export default class Keyboard {
     static KEY_DOWN = 'ArrowDown';
     static KEY_LEFT = 'ArrowLeft';
     static KEY_RIGHT = 'ArrowRight';
+    static KEY_SPACE = 'Space';
 
     private body: HTMLElement;
     private events: any;
@@ -23,7 +24,10 @@ export default class Keyboard {
     }
 
     private listener(e: KeyboardEvent) {
-        let events = this.events[e.key] || [];
+        if (e.code === 'KeyR') {
+            return;
+        }
+        let events = this.events[e.code] || [];
         for (let cb of events) {
             cb();
         }

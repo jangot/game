@@ -2,16 +2,21 @@ import Entity from '../../interface/entity';
 import Canvas from '../canvas';
 
 class Abstract implements Entity {
-    protected canvas: Canvas;
-    protected x: number;
-    protected y: number;
+    public x: number;
+    public y: number;
+    public width:number;
+    public height:number;
 
-    constructor(canvas: Canvas) {
+    protected canvas: Canvas;
+
+    constructor(canvas: Canvas, x:number = 0, y:number = 0) {
         this.canvas = canvas;
         this.canvas.add(this);
 
-        this.x = 40;
-        this.y = 40;
+        this.x = x;
+        this.y = y;
+        this.width = 1;
+        this.height = 1;
     }
     draw():Entity {
         return this;
@@ -31,6 +36,34 @@ class Abstract implements Entity {
         this.y += y;
 
         return this;
+    }
+    destroy() {
+        this.canvas.remove(this);
+    }
+    isCross(entity:Entity) {
+        return this.isCrossX(entity) && this.isCrossY(entity);
+    }
+
+    protected isCrossX(entity:Entity):boolean {
+        let point1 = entity.x;
+        let point2 = entity.x + entity.width;
+
+        let x1 = this.x;
+        let x2 = this.x + this.width;
+
+        return this.isPointBetween(point1, x1, x2) || this.isPointBetween(point2, x1, x2);
+    }
+    protected isCrossY(entity:Entity):boolean {
+        let point1 = entity.y;
+        let point2 = entity.y + entity.height;
+
+        let y1 = this.y;
+        let y2 = this.y + this.height;
+
+        return this.isPointBetween(point1, y1, y2) || this.isPointBetween(point2, y1, y2);
+    }
+    protected isPointBetween(point:number, c1:number, c2:number):boolean {
+        return c1 < point && point < c2;
     }
 }
 

@@ -1,19 +1,27 @@
 import AbstractEntity from './abstract';
-import Canvas from '../canvas'
+import Canvas from '../canvas';
+import Bullet from '../entity/bullet';
 
 class Man extends AbstractEntity {
-    private ariaSize: number;
+    static STEP = 5;
 
-    constructor(canvas: Canvas) {
-        super(canvas);
+    constructor(canvas: Canvas, x:number = 100, y:number = 100) {
+        super(canvas, x, y);
 
-        this.ariaSize = 10;
+        this.width = 50;
+        this.height = 50;
     }
     draw() {
         let context = this.canvas.getContext();
 
+        let center = {
+            x: this.x + this.width/2,
+            y: this.y + this.height/2
+        };
+        let radius = this.width/2;
+
         context.beginPath();
-        context.arc(this.x, this.y, this.ariaSize, 0, 2 * Math.PI, false);
+        context.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
         context.fillStyle = 'green';
         context.fill();
         context.lineWidth = 1;
@@ -22,10 +30,19 @@ class Man extends AbstractEntity {
 
         return this;
     }
-    addX(x: number): Man {
+
+    moveRight():Man {
+        return this.addX(Man.STEP);
+    }
+
+    moveLeft():Man {
+        return this.addX(-1 * Man.STEP);
+    }
+
+    addX(x: number):Man {
         let newX = this.x + x;
-        let leftBorder = this.ariaSize;
-        let rightBorder = this.canvas.width - this.ariaSize;
+        let leftBorder = 0;
+        let rightBorder = this.canvas.width - this.width;
 
         if (newX < leftBorder || newX > rightBorder) {
             return this;
@@ -37,8 +54,8 @@ class Man extends AbstractEntity {
 
     addY(y: number): Man {
         let newY = this.y + y;
-        let topBorder = this.ariaSize;
-        let bottomBorder = this.canvas.height - this.ariaSize;
+        let topBorder = 0;
+        let bottomBorder = this.canvas.height - this.height;
 
         if (newY < topBorder || newY > bottomBorder) {
             return this;
@@ -46,6 +63,14 @@ class Man extends AbstractEntity {
         this.y = newY;
 
         return this;
+    }
+    fire():Bullet {
+        let position = {
+            x: this.x + this.width/2,
+            y: this.y
+        };
+
+        return new Bullet(this.canvas, position.x, position.y);
     }
 }
 

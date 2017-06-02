@@ -1,3 +1,4 @@
+import { remove } from 'lodash';
 import Entity from '../interface/entity';
 
 export default class Canvas {
@@ -25,6 +26,11 @@ export default class Canvas {
     }
     public add(entity: Entity):Canvas {
         this.entities.push(entity);
+
+        return this;
+    }
+    public remove(entity: Entity):Canvas {
+        remove(this.entities, entity);
 
         return this;
     }
