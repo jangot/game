@@ -8,6 +8,7 @@ interface Entity {
     addX(x: number): Entity;
     addY(y: number): Entity;
     isCross(entity:Entity):boolean;
+    destroy():void;
 }
 
 export default Entity;

@@ -63,7 +63,7 @@ class Abstract implements Entity {
         return this.isPointBetween(point1, y1, y2) || this.isPointBetween(point2, y1, y2);
     }
     protected isPointBetween(point:number, c1:number, c2:number):boolean {
-        return c1 < point && point < c2;
+        return c1 <= point && point <= c2;
     }
 }
 

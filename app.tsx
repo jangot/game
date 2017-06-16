@@ -6,8 +6,8 @@ import Bullet from './class/entity/bullet';
 import Keyboard from './class/keyboard';
 import { TICK_TIME } from './constant';
 
-const WIDTH = 400;
-const HEIGHT = 600;
+const WIDTH = 340;
+const HEIGHT = 500;
 
 export default function app(canvasElement: HTMLCanvasElement) {
     const canvas = new Canvas(canvasElement);
@@ -46,18 +46,10 @@ export default function app(canvasElement: HTMLCanvasElement) {
 
     function tick() {
         for (let bullet of bullets) {
-            if (bullet.y <= 0) {
-                removeBullet(bullet);
-            }
-            if (enemies && enemies.isCross(bullet)) {
-                removeBullet(bullet);
+            let killed = enemies.killIfCross(bullet);
 
-                enemies.destroy();
-                enemies = null;
-
-                setTimeout(() => {
-                    enemies = new Enemies(canvas);
-                }, 500);
+            if (killed || bullet.y <= 0) {
+                removeBullet(bullet);
             }
         }
 
