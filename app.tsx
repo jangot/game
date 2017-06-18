@@ -7,7 +7,7 @@ import Keyboard from './class/keyboard';
 import { TICK_TIME } from './constant';
 
 const WIDTH = 340;
-const HEIGHT = 500;
+const HEIGHT = 200;
 
 let tickTimer:number;
 let canvas:Canvas;
@@ -40,7 +40,6 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
             if (bullets.length < 1) {
                 bullets.push(player.fire());
             }
-
         })
     ;
 
@@ -53,6 +52,12 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
             if (killed || bullet.y <= 0) {
                 removeBullet(bullet);
             }
+        }
+
+        let crossPlayer = enemies.killIfCross(player);
+        if (crossPlayer) {
+            clearInterval(tickTimer);
+            // enemies.destroy();
         }
 
         canvas.draw();

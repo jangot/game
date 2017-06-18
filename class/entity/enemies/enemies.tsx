@@ -29,7 +29,7 @@ class Enemies extends AbstractEntity {
         this.items = this.getItems();
         this.timer = setInterval(() => {
             this.moveAll();
-        }, 500);
+        }, 100);
     }
 
     draw() {
@@ -40,9 +40,9 @@ class Enemies extends AbstractEntity {
         return this;
     }
 
-    killIfCross(bullet: Entity): boolean {
+    killIfCross(entity: Entity): boolean {
         for (let item of this.items) {
-            if (item.isCross(bullet)) {
+            if (item.isCross(entity)) {
                 remove(this.items, item);
 
                 item.destroy();
@@ -50,13 +50,15 @@ class Enemies extends AbstractEntity {
                 return true;
             }
         }
-
         return false;
     }
 
     destroy() {
         super.destroy();
 
+        for (let item of this.items) {
+            item.destroy();
+        }
         clearInterval(this.timer);
     }
 
