@@ -8,19 +8,30 @@ class EnemiesFactory {
     static ENEMIES_MARGIN = 5;
 
     private canvas: Canvas;
+    private columns: number;
+    private lines: number;
 
-    private counter = 0;
-    private lastX = 0;
-    private lastY = 0;
+    private column = -1;
+    private line = 0;
 
     constructor(canvas: Canvas) {
         this.canvas = canvas;
+        this.columns = Math.ceil(
+            canvas.width / (AbstractEnemies.WIDTH + EnemiesFactory.ENEMIES_MARGIN)
+            ) - 2;
+        this.lines = 4;
     }
 
     [Symbol.iterator]() { return this };
 
     public next(): { done: boolean, value: Entity } {
-        if (this.counter === EnemiesFactory.ENEMIES_COUNT) {
+        this.column++;
+        if (this.column === this.columns) {
+            this.column = 0;
+            this.line++;
+        }
+
+        if (this.line === this.lines) {
             return {
                 done: true,
                 value: null
@@ -28,7 +39,6 @@ class EnemiesFactory {
         }
 
         let coordinates = this.getCoordinates();
-        this.counter++;
 
         return {
             done: false,
@@ -37,19 +47,11 @@ class EnemiesFactory {
     }
 
     private getCoordinates(): { x:number, y:number } {
-        if (this.counter > 0) {
-            this.lastX += AbstractEnemies.WIDTH + EnemiesFactory.ENEMIES_MARGIN;
-        }
+        let x = this.column * (AbstractEnemies.WIDTH + EnemiesFactory.ENEMIES_MARGIN);
+        let y = this.line * (AbstractEnemies.HEIGHT + EnemiesFactory.ENEMIES_MARGIN);
 
-        if (this.lastX > this.canvas.width - 50) {
-            this.lastX = 0;
-            this.lastY += (AbstractEnemies.HEIGHT + EnemiesFactory.ENEMIES_MARGIN);
-        }
 
-        return {
-            x: this.lastX,
-            y: this.lastY
-        }
+        return { x, y };
     }
 }
 

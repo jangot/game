@@ -1,4 +1,4 @@
-
+import bind from 'bind-decorator';
 
 export default class Keyboard {
     static KEY_UP = 'ArrowUp';
@@ -13,16 +13,21 @@ export default class Keyboard {
     constructor(body:HTMLElement) {
         this.body = body;
         this.events = {};
-        this.body.addEventListener('keydown', this.listener.bind(this));
+        this.body.addEventListener('keydown', this.listener);
     }
 
-    onKey(name: string, cb: () => any):Keyboard {
+    public onKey(name: string, cb: () => any):Keyboard {
         this.events[name] = this.events[name] || [];
         this.events[name].push(cb);
 
         return this;
     }
 
+    public destroy() {
+        this.body.removeEventListener('keydown', this.listener)
+    }
+
+    @bind
     private listener(e: KeyboardEvent) {
         if (e.code === 'KeyR') {
             return;

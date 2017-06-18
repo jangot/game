@@ -47,4 +47,10 @@ export default class Canvas {
         return this.canvas.getContext('2d');
     }
 
+    public destroy() {
+        for (let entity of this.entities) {
+            entity.destroy();
+        }
+        this.entities = [];
+    }
 }

@@ -9,8 +9,12 @@ import { TICK_TIME } from './constant';
 const WIDTH = 340;
 const HEIGHT = 500;
 
-export default function app(canvasElement: HTMLCanvasElement) {
-    const canvas = new Canvas(canvasElement);
+let tickTimer:number;
+let canvas:Canvas;
+let bullets:Bullet[] = [];
+
+export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboard) {
+    canvas = new Canvas(canvasElement);
 
     canvas
         .setWidth(WIDTH)
@@ -19,8 +23,6 @@ export default function app(canvasElement: HTMLCanvasElement) {
     let enemies = new Enemies(canvas);
     let player = new Man(canvas, WIDTH/2, HEIGHT-10);
 
-    let keyboard = new Keyboard(document.getElementById('body'));
-    let bullets:Bullet[] = [];
     keyboard
         .onKey(Keyboard.KEY_LEFT, () => {
             player.moveLeft();
@@ -42,7 +44,7 @@ export default function app(canvasElement: HTMLCanvasElement) {
         })
     ;
 
-    setInterval(tick, TICK_TIME);
+    tickTimer = setInterval(tick, TICK_TIME);
 
     function tick() {
         for (let bullet of bullets) {
@@ -60,4 +62,10 @@ export default function app(canvasElement: HTMLCanvasElement) {
         remove(bullets, bullet);
         bullet.destroy();
     }
-}
+};
+
+export let stop = function () {
+    clearInterval(tickTimer);
+    bullets = [];
+    canvas.destroy();
+};
