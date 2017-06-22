@@ -16,6 +16,13 @@ class Enemies extends AbstractEntity {
     static RIGHT_BORDER = 5;
     static MOVE_STEP = 10;
 
+    public get length() {
+        return this.items.length;
+    };
+    public get border() {
+        return this.getBorder();
+    }
+
     protected timer:number;
     protected items: Entity[];
     protected direction: string = Enemies.RIGHT_DIRECTION;
@@ -29,7 +36,7 @@ class Enemies extends AbstractEntity {
         this.items = this.getItems();
         this.timer = setInterval(() => {
             this.moveAll();
-        }, 100);
+        }, 500);
     }
 
     draw() {
@@ -93,8 +100,8 @@ class Enemies extends AbstractEntity {
         let result = {
             left: this.canvas.width,
             right: 0,
-            top: 0,
-            bottom: this.canvas.height
+            bottom: 0,
+            top: this.canvas.height
         };
 
         for (let item of this.items) {
@@ -109,10 +116,10 @@ class Enemies extends AbstractEntity {
             if (right > result.right) {
                 result.right = right;
             }
-            if (top < result.top) {
+            if (top <    result.top) {
                 result.top = top;
             }
-            if (bottom < result.bottom) {
+            if (bottom > result.bottom) {
                 result.bottom = bottom;
             }
         }

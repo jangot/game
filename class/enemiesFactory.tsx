@@ -19,7 +19,7 @@ class EnemiesFactory {
         this.columns = Math.ceil(
             canvas.width / (AbstractEnemies.WIDTH + EnemiesFactory.ENEMIES_MARGIN)
             ) - 2;
-        this.lines = 4;
+        this.lines = 5;
     }
 
     [Symbol.iterator]() { return this };

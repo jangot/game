@@ -3,11 +3,10 @@ import Canvas from './class/canvas';
 import Man from './class/entity/man';
 import Enemies from './class/entity/enemies/enemies';
 import Bullet from './class/entity/bullet';
+import Looser from './class/entity/looser';
+import Winner from './class/entity/winner';
 import Keyboard from './class/keyboard';
 import { TICK_TIME } from './constant';
-
-const WIDTH = 340;
-const HEIGHT = 200;
 
 let tickTimer:number;
 let canvas:Canvas;
@@ -16,12 +15,8 @@ let bullets:Bullet[] = [];
 export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboard) {
     canvas = new Canvas(canvasElement);
 
-    canvas
-        .setWidth(WIDTH)
-        .setHeight(HEIGHT);
-
     let enemies = new Enemies(canvas);
-    let player = new Man(canvas, WIDTH/2, HEIGHT-10);
+    let player = new Man(canvas);
 
     keyboard
         .onKey(Keyboard.KEY_LEFT, () => {
@@ -55,9 +50,15 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
         }
 
         let crossPlayer = enemies.killIfCross(player);
-        if (crossPlayer) {
+        if (crossPlayer || enemies.border.bottom >= canvas.height) {
+            new Looser(canvas);
             clearInterval(tickTimer);
-            // enemies.destroy();
+        }
+
+        if (enemies.length === 0) {
+            enemies.destroy();
+            clearInterval(tickTimer);
+            new Winner(canvas);
         }
 
         canvas.draw();

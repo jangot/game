@@ -1,5 +1,6 @@
 import { remove } from 'lodash';
 import Entity from '../interface/entity';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../constant';
 
 export default class Canvas {
     private entities: Entity[];
@@ -11,6 +12,10 @@ export default class Canvas {
     public constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.entities = [];
+
+        this
+            .setWidth(CANVAS_WIDTH)
+            .setHeight(CANVAS_HEIGHT);
     }
     public setWidth(width: number):Canvas {
         this.width = width;
