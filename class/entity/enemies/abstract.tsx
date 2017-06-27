@@ -15,12 +15,16 @@ class AbstractEnemies extends AbstractEntity {
     draw() {
         super.draw();
 
-        let context = this.canvas.getContext();
+        let start = {
+            x: this.x,
+            y: this.y
+        };
+        let end = {
+            x: this.width,
+            y: this.height
+        };
 
-        context.fillStyle = 'orange';
-        context.strokeStyle = 'red';
-
-        context.fillRect(this.x, this.y, this.width, this.height);
+        this.canvas.drawFillRect(start, end, 'orange');
 
 
         return this;

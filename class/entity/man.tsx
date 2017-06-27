@@ -11,21 +11,18 @@ class Man extends AbstractEntity {
     constructor(canvas: Canvas, x:number = 100, y:number = 100) {
         super(canvas, x, y);
 
-        this.width = 16;
-        this.height = 16;
+        this.width = 32;
+        this.height = 32;
 
         this.x = canvas.width / 2;
-        this.y = canvas.height - 16;
+        this.y = canvas.height - this.height;
         this.image = document.getElementById('man') as HTMLImageElement;
     }
     draw() {
         super.draw();
 
         let ctx = this.canvas.getContext();
-
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-        ctx.stroke();
-        ctx.fill();
 
         return this;
     }
@@ -66,7 +63,7 @@ class Man extends AbstractEntity {
     fire():Bullet {
         let center = this.getCenter();
 
-        return new Bullet(this.canvas, center.x, center.y - Man.GUN_LENGTH);
+        return new Bullet(this.canvas, center.x-3, center.y - Man.GUN_LENGTH);
     }
 }
 

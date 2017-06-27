@@ -66,21 +66,20 @@ export default class Canvas {
 
         ctx.beginPath();
         ctx.moveTo(center.x + radius, center.y);
-        ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
         ctx.strokeStyle = color;
+        ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
         ctx.stroke();
 
         return this;
     }
 
     public drawFillRound(center:any, radius:number, color:string):Canvas {
-        console.log(`color`, color);
         let ctx = this.getContext();
 
         ctx.beginPath();
         ctx.moveTo(center.x + radius, center.y);
-        ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = color;
+        ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
         ctx.fill();
 
         return this;
@@ -89,9 +88,21 @@ export default class Canvas {
     public drawStrokeRect(start:any, end:any, color:string):Canvas {
         let ctx = this.getContext();
 
-        ctx.strokeRect(start.x, start.y, end.x, end.y);
+        ctx.beginPath();
         ctx.strokeStyle = color;
+        ctx.strokeRect(start.x, start.y, end.x, end.y);
         ctx.stroke();
+
+        return this;
+    }
+
+    public drawFillRect(start:any, end:any, color:string):Canvas {
+        let ctx = this.getContext();
+
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.fillRect(start.x, start.y, end.x, end.y);
+        ctx.fill();
 
         return this;
     }
