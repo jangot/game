@@ -11,14 +11,13 @@ export default class Looser extends AbstractEntity {
     }
 
     draw() {
+        super.draw();
+
         let context = this.canvas.getContext();
 
         context.fillStyle = 'red';
-        context.strokeStyle = 'red';
         context.font = '30px Arial';
         context.fillText('LOOSER!', this.x, this.y);
-
-        context.stroke();
 
         return this;
     }

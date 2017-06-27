@@ -1,4 +1,4 @@
-import { remove } from 'lodash';
+import { remove, random } from 'lodash';
 import AbstractEntity from '../abstract';
 import AbstractEnemies from './abstract';
 import Canvas from '../../canvas';
@@ -15,6 +15,12 @@ class Enemies extends AbstractEntity {
     static LEFT_BORDER = 5;
     static RIGHT_BORDER = 5;
     static MOVE_STEP = 10;
+    static ATTACK_WAITING = [
+        10,
+        5,
+        3,
+        1
+    ];
 
     public get length() {
         return this.items.length;
@@ -24,7 +30,9 @@ class Enemies extends AbstractEntity {
     }
 
     protected timer:number;
+    protected attackTimer:number;
     protected items: Entity[];
+    protected attackItem: Entity;
     protected direction: string = Enemies.RIGHT_DIRECTION;
 
     constructor(canvas:Canvas, x:number = 0, y:number = 0) {
@@ -40,6 +48,8 @@ class Enemies extends AbstractEntity {
     }
 
     draw() {
+        super.draw();
+
         for (let item of this.items) {
             item.draw();
         }
@@ -172,6 +182,25 @@ class Enemies extends AbstractEntity {
             items.push(item);
         }
         return items;
+    }
+
+    protected attack() {
+        if (this.attackItem) {
+            return;
+        }
+
+        let index = random(0, this.items.length);
+        this.attackItem = this.items[index];
+        let startCoordinates = {
+            x: this.attackItem.x,
+            y: this.attackItem.y
+        };
+
+        this.attackTimer = setInterval(() => {
+
+
+
+        }, 1000)
     }
 }
 

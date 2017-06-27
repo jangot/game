@@ -13,6 +13,8 @@ class AbstractEnemies extends AbstractEntity {
     }
 
     draw() {
+        super.draw();
+
         let context = this.canvas.getContext();
 
         context.fillStyle = 'orange';

@@ -8,20 +8,17 @@ class Bullet extends AbstractEntity {
     constructor(canvas: Canvas, x:number, y:number) {
         super(canvas, x, y);
 
+        this.width = 6;
+        this.height = 6;
+
         this.timer = setInterval(() => {
             this.addY(-5);
-        }, TICK_TIME);
+        }, TICK_TIME /2);
     }
     draw() {
-        let context = this.canvas.getContext();
+        super.draw();
 
-        context.beginPath();
-        context.arc(this.x, this.y, 2, 0, 2 * Math.PI, false);
-        context.fillStyle = 'red';
-        context.fill();
-        context.lineWidth = 0;
-        context.strokeStyle = 'red';
-        context.stroke();
+        this.canvas.drawFillRound(this.getCenter(), 3, 'silver');
 
         return this;
     }

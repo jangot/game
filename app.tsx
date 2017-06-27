@@ -10,13 +10,14 @@ import { TICK_TIME } from './constant';
 
 let tickTimer:number;
 let canvas:Canvas;
-let bullets:Bullet[] = [];
+let bullets:Bullet[];
 
 export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboard) {
+    bullets = [];
     canvas = new Canvas(canvasElement);
 
-    let enemies = new Enemies(canvas);
     let player = new Man(canvas);
+    let enemies = new Enemies(canvas);
 
     keyboard
         .onKey(Keyboard.KEY_LEFT, () => {

@@ -4,34 +4,28 @@ import Bullet from '../entity/bullet';
 
 class Man extends AbstractEntity {
     static STEP = 5;
-    static GUN_LENGTH = 35;
+    static GUN_LENGTH = 16;
+
+    protected image: HTMLImageElement;
 
     constructor(canvas: Canvas, x:number = 100, y:number = 100) {
         super(canvas, x, y);
 
+        this.width = 16;
+        this.height = 16;
+
         this.x = canvas.width / 2;
-        this.y = canvas.height - 10;
-        this.width = 50;
-        this.height = 50;
+        this.y = canvas.height - 16;
+        this.image = document.getElementById('man') as HTMLImageElement;
     }
     draw() {
-        let context = this.canvas.getContext();
+        super.draw();
 
-        let center = this.getCenter();
-        let radius = this.width/2;
+        let ctx = this.canvas.getContext();
 
-        context.beginPath();
-        context.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
-        context.fillStyle = 'green';
-        context.fill();
-        context.lineWidth = 1;
-        context.strokeStyle = '#003300';
-        context.stroke();
-
-        context.moveTo(center.x, center.y);
-        context.lineTo(center.x, center.y - Man.GUN_LENGTH);
-        context.lineWidth = 5;
-        context.stroke();
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        ctx.stroke();
+        ctx.fill();
 
         return this;
     }
@@ -73,13 +67,6 @@ class Man extends AbstractEntity {
         let center = this.getCenter();
 
         return new Bullet(this.canvas, center.x, center.y - Man.GUN_LENGTH);
-    }
-
-    private getCenter() {
-        return {
-            x: this.x + this.width/2,
-            y: this.y + this.height/2
-        };
     }
 }
 

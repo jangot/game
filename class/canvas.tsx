@@ -5,12 +5,14 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../constant';
 export default class Canvas {
     private entities: Entity[];
     private canvas: HTMLCanvasElement;
+    private context: CanvasRenderingContext2D;
 
     public width: number;
     public height: number;
 
     public constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
+        this.context = canvas.getContext('2d');
         this.entities = [];
 
         this
@@ -49,7 +51,7 @@ export default class Canvas {
         return this;
     }
     public getContext():CanvasRenderingContext2D {
-        return this.canvas.getContext('2d');
+        return this.context;
     }
 
     public destroy() {
@@ -57,5 +59,40 @@ export default class Canvas {
             entity.destroy();
         }
         this.entities = [];
+    }
+
+    public drawStrokeRound(center:any, radius:number, color:string):Canvas {
+        let ctx = this.getContext();
+
+        ctx.beginPath();
+        ctx.moveTo(center.x + radius, center.y);
+        ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
+        ctx.strokeStyle = color;
+        ctx.stroke();
+
+        return this;
+    }
+
+    public drawFillRound(center:any, radius:number, color:string):Canvas {
+        console.log(`color`, color);
+        let ctx = this.getContext();
+
+        ctx.beginPath();
+        ctx.moveTo(center.x + radius, center.y);
+        ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        return this;
+    }
+
+    public drawStrokeRect(start:any, end:any, color:string):Canvas {
+        let ctx = this.getContext();
+
+        ctx.strokeRect(start.x, start.y, end.x, end.y);
+        ctx.strokeStyle = color;
+        ctx.stroke();
+
+        return this;
     }
 }

@@ -1,3 +1,4 @@
+import { DEBUG } from '../../constant';
 import Entity from '../../interface/entity';
 import Canvas from '../canvas';
 
@@ -19,6 +20,21 @@ class Abstract implements Entity {
         this.height = 1;
     }
     draw():Entity {
+        if (!DEBUG) {
+            return this;
+        }
+
+        let start = {
+            x: this.x,
+            y: this.y
+        };
+        let end = {
+            x: this.width,
+            y: this.height
+        };
+
+        this.canvas.drawStrokeRect(start, end, 'black');
+
         return this;
     }
     setPosition(x: number, y: number):Entity {
@@ -42,6 +58,13 @@ class Abstract implements Entity {
     }
     isCross(entity:Entity) {
         return this.isCrossX(entity) && this.isCrossY(entity);
+    }
+
+    protected getCenter() {
+        return {
+            x: this.x + this.width / 2,
+            y: this.y + this.height / 2
+        }
     }
 
     protected isCrossX(entity:Entity):boolean {
