@@ -1,6 +1,7 @@
 import { remove, random } from 'lodash';
 import AbstractEntity from '../abstract';
 import AbstractEnemies from './abstract';
+import Coordinate from '../../../interface/coordinate';
 import Canvas from '../../canvas';
 import Entity from '../../../interface/entity';
 import EnemiesFactory from '../../enemiesFactory';
@@ -30,9 +31,9 @@ class Enemies extends AbstractEntity {
     }
 
     protected timer:number;
-    protected attackTimer:number;
     protected items: Entity[];
     protected attackItem: Entity;
+    protected attackPosition: Coordinate;
     protected direction: string = Enemies.RIGHT_DIRECTION;
 
     constructor(canvas:Canvas, x:number = 0, y:number = 0) {
@@ -68,6 +69,36 @@ class Enemies extends AbstractEntity {
             }
         }
         return false;
+    }
+
+    attack() {
+        if (this.attackItem) {
+            return;
+        }
+
+        let index = random(0, this.items.length);
+        this.attackItem = this.items[index];
+        this.attackPosition = {
+            x: this.attackItem.x,
+            y: this.attackItem.y
+        };
+
+        let xDirection = 1;
+        let attackTimer = setInterval(() => {
+            this.attackItem.addY(5);
+
+            let needX = random(0, 30);
+            if (needX === 10 || this.attackItem.x <= 0 || this.attackItem.x + this.attackItem.width >= this.canvas.width) {
+                xDirection *= -1
+            }
+            this.attackItem.addX(2 * xDirection);
+            if (this.attackItem.y >= this.canvas.height) {
+                this.attackItem.setPosition(this.attackPosition.x, this.attackPosition.y);
+
+                clearInterval(attackTimer);
+                this.attackItem = null;
+            }
+        }, 20)
     }
 
     destroy() {
@@ -115,6 +146,10 @@ class Enemies extends AbstractEntity {
         };
 
         for (let item of this.items) {
+            if (item === this.attackItem) {
+                continue;
+            }
+
             let left = item.x;
             let right = item.x + AbstractEnemies.WIDTH;
             let top = item.y;
@@ -126,7 +161,7 @@ class Enemies extends AbstractEntity {
             if (right > result.right) {
                 result.right = right;
             }
-            if (top <    result.top) {
+            if (top < result.top) {
                 result.top = top;
             }
             if (bottom > result.bottom) {
@@ -167,9 +202,17 @@ class Enemies extends AbstractEntity {
 
         for (let item of this.items) {
             if (isY) {
-                item.addY(size);
+                if (item == this.attackItem) {
+                    this.attackPosition.y += size;
+                } else {
+                    item.addY(size);
+                }
             } else {
-                item.addX(size);
+                if (item == this.attackItem) {
+                    this.attackPosition.x += size;
+                } else {
+                    item.addX(size);
+                }
             }
         }
     }
@@ -184,24 +227,7 @@ class Enemies extends AbstractEntity {
         return items;
     }
 
-    protected attack() {
-        if (this.attackItem) {
-            return;
-        }
 
-        let index = random(0, this.items.length);
-        this.attackItem = this.items[index];
-        let startCoordinates = {
-            x: this.attackItem.x,
-            y: this.attackItem.y
-        };
-
-        this.attackTimer = setInterval(() => {
-
-
-
-        }, 1000)
-    }
 }
 
 export default Enemies;

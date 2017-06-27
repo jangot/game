@@ -27,7 +27,7 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
             player.moveRight();
         })
         .onKey(Keyboard.KEY_UP, () => {
-            tick();
+            enemies.attack();
         })
         .onKey(Keyboard.KEY_DOWN, () => {
             // player.addY(5);

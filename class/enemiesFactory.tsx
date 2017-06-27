@@ -2,6 +2,7 @@ import Canvas from './canvas';
 import Entity from '../interface/entity';
 import AbstractEnemies from './entity/enemies/abstract';
 import Simple from './entity/enemies/simple';
+import Coordinate from '../interface/coordinate';
 
 class EnemiesFactory {
     static ENEMIES_COUNT = 36;
@@ -46,7 +47,7 @@ class EnemiesFactory {
         }
     }
 
-    private getCoordinates(): { x:number, y:number } {
+    private getCoordinates():Coordinate {
         let x = this.column * (AbstractEnemies.WIDTH + EnemiesFactory.ENEMIES_MARGIN);
         let y = this.line * (AbstractEnemies.HEIGHT + EnemiesFactory.ENEMIES_MARGIN);
 
