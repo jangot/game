@@ -1,5 +1,6 @@
 import { remove } from 'lodash';
 import Entity from '../interface/entity';
+import Coordinate from '../interface/coordinate';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../constant';
 
 export default class Canvas {
@@ -61,7 +62,7 @@ export default class Canvas {
         this.entities = [];
     }
 
-    public drawStrokeRound(center:any, radius:number, color:string):Canvas {
+    public drawStrokeRound(center:Coordinate, radius:number, color:string):Canvas {
         let ctx = this.getContext();
 
         ctx.beginPath();
@@ -73,7 +74,7 @@ export default class Canvas {
         return this;
     }
 
-    public drawFillRound(center:any, radius:number, color:string):Canvas {
+    public drawFillRound(center:Coordinate, radius:number, color:string):Canvas {
         let ctx = this.getContext();
 
         ctx.beginPath();
@@ -85,7 +86,7 @@ export default class Canvas {
         return this;
     }
 
-    public drawStrokeRect(start:any, end:any, color:string):Canvas {
+    public drawStrokeRect(start:Coordinate, end:Coordinate, color:string):Canvas {
         let ctx = this.getContext();
 
         ctx.beginPath();
@@ -96,7 +97,7 @@ export default class Canvas {
         return this;
     }
 
-    public drawFillRect(start:any, end:any, color:string):Canvas {
+    public drawFillRect(start:Coordinate, end:Coordinate, color:string):Canvas {
         let ctx = this.getContext();
 
         ctx.beginPath();
