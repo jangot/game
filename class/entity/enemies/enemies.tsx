@@ -13,15 +13,12 @@ class Enemies extends AbstractEntity {
     static LEFT_BOTTOM_DIRECTION = 'lb';
     static RIGHT_BOTTOM_DIRECTION = 'rb';
 
+    static MOVE_TIME = 300;
     static LEFT_BORDER = 5;
     static RIGHT_BORDER = 5;
     static MOVE_STEP = 10;
-    static ATTACK_WAITING = [
-        10,
-        5,
-        3,
-        1
-    ];
+    static ATTACK_STEP_X = 2;
+    static ATTACK_STEP_Y = 5;
 
     public get length() {
         return this.items.length;
@@ -45,7 +42,7 @@ class Enemies extends AbstractEntity {
         this.items = this.getItems();
         this.timer = setInterval(() => {
             this.moveAll();
-        }, 500);
+        }, Enemies.MOVE_TIME);
     }
 
     draw() {
@@ -76,22 +73,20 @@ class Enemies extends AbstractEntity {
             return;
         }
 
-        let index = random(0, this.items.length);
-        this.attackItem = this.items[index];
+        this.attackItem = this.getRandomItem();
         this.attackPosition = {
             x: this.attackItem.x,
             y: this.attackItem.y
         };
 
-        let xDirection = 1;
+        let xDirection = Enemies.ATTACK_STEP_X;
         let attackTimer = setInterval(() => {
-            this.attackItem.addY(5);
+            this.attackItem.addY(Enemies.ATTACK_STEP_Y);
 
-            let needX = random(0, 30);
-            if (needX === 10 || this.attackItem.x <= 0 || this.attackItem.x + this.attackItem.width >= this.canvas.width) {
+            if (this.needChangeAttackDirection(this.attackItem)) {
                 xDirection *= -1
             }
-            this.attackItem.addX(2 * xDirection);
+            this.attackItem.addX(xDirection);
             if (this.attackItem.y >= this.canvas.height) {
                 this.attackItem.setPosition(this.attackPosition.x, this.attackPosition.y);
 
@@ -99,6 +94,10 @@ class Enemies extends AbstractEntity {
                 this.attackItem = null;
             }
         }, 20)
+    }
+
+    inAttack(): boolean {
+        return !!this.attackItem;
     }
 
     destroy() {
@@ -110,12 +109,25 @@ class Enemies extends AbstractEntity {
         clearInterval(this.timer);
     }
 
+    protected needChangeAttackDirection(item: Entity): boolean {
+        let isPositionInBorder = item.x <= 0 || item.x + item.width >= this.canvas.width;
+        let needX = random(0, 60) === 0;
+
+        return isPositionInBorder || needX;
+    }
+
     protected moveAll() {
         if (this.needUpdateDirection()) {
             this.updateDirection();
         }
 
         this.moveToCurrentDirection();
+    }
+
+    protected getRandomItem(): Entity {
+        let index = random(0, this.items.length - 1);
+
+        return this.items[index];
     }
 
     protected needUpdateDirection(): boolean {

@@ -6,13 +6,16 @@ import Bullet from './class/entity/bullet';
 import Looser from './class/entity/looser';
 import Winner from './class/entity/winner';
 import Keyboard from './class/keyboard';
-import { TICK_TIME } from './constant';
+import { TICK_TIME, ATTACK_STEPS } from './constant';
 
-let tickTimer:number;
-let canvas:Canvas;
-let bullets:Bullet[];
+let tickTimer: number;
+let canvas: Canvas;
+let bullets: Bullet[];
+let attackSteps: number[];
+let inAttack: boolean;
 
 export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboard) {
+    attackSteps = ATTACK_STEPS.concat();
     bullets = [];
     canvas = new Canvas(canvasElement);
 
@@ -27,7 +30,7 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
             player.moveRight();
         })
         .onKey(Keyboard.KEY_UP, () => {
-            enemies.attack();
+            // enemies.attack();
         })
         .onKey(Keyboard.KEY_DOWN, () => {
             // player.addY(5);
@@ -54,12 +57,20 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
         if (crossPlayer || enemies.border.bottom >= canvas.height) {
             new Looser(canvas);
             clearInterval(tickTimer);
-        }
-
-        if (enemies.length === 0) {
+        } else if (enemies.length === 0) {
             enemies.destroy();
             clearInterval(tickTimer);
             new Winner(canvas);
+        }
+
+        if (!enemies.inAttack() && !inAttack) {
+            let time = attackSteps.shift() || 1;
+            inAttack = true;
+
+            setTimeout(() => {
+                enemies.attack();
+                inAttack = false;
+            }, time * 1000)
         }
 
         canvas.draw();
@@ -75,4 +86,5 @@ export let stop = function () {
     clearInterval(tickTimer);
     bullets = [];
     canvas.destroy();
+    inAttack = false;
 };
