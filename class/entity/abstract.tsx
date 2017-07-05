@@ -59,7 +59,7 @@ class Abstract implements Entity {
             y: this.height
         };
 
-        this.canvas.drawStrokeRect(start, end, 'black');
+        this.canvas.drawStrokeRect(start, end, '#00ff00');
     }
 
     protected getCenter() {

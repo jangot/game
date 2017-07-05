@@ -5,6 +5,7 @@ import Coordinate from '../../../interface/coordinate';
 import Canvas from '../../canvas';
 import Entity from '../../../interface/entity';
 import EnemiesFactory from '../../enemiesFactory';
+import { TICK_TIME } from '../../../constant';
 
 class Enemies extends AbstractEntity {
 
@@ -27,7 +28,7 @@ class Enemies extends AbstractEntity {
         return this.getBorder();
     }
 
-    protected timer:number;
+    protected timer: number;
     protected items: Entity[];
     protected attackItem: Entity;
     protected attackPosition: Coordinate;
@@ -88,12 +89,11 @@ class Enemies extends AbstractEntity {
             }
             this.attackItem.addX(xDirection);
             if (this.attackItem.y >= this.canvas.height) {
-                this.attackItem.setPosition(this.attackPosition.x, this.attackPosition.y);
 
                 clearInterval(attackTimer);
-                this.attackItem = null;
+                this.finishAttack();
             }
-        }, 20)
+        }, TICK_TIME)
     }
 
     inAttack(): boolean {
@@ -107,6 +107,38 @@ class Enemies extends AbstractEntity {
             item.destroy();
         }
         clearInterval(this.timer);
+    }
+
+    protected finishAttack() {
+        let x = this.attackItem.x;
+        let y = this.attackItem.height * -1;
+
+        this.attackItem.setPosition(x, y);
+
+        let finishTimer = setInterval(() => {
+            let { x, y } = this.attackItem;
+
+            let aX = this.attackPosition.x;
+            let aY = this.attackPosition.y;
+
+            let yDuration = aY - y;
+            let xDuration = aX - x;
+
+            if (yDuration === 0 && xDuration === 0) {
+                clearInterval(finishTimer);
+                this.attackItem = null;
+                return;
+            }
+
+            if (yDuration !== 0) {
+                this.attackItem.addY(1);
+            }
+            if (xDuration > 0) {
+                this.attackItem.addX(1);
+            } else if (xDuration < 0) {
+                this.attackItem.addX(-1);
+            }
+        }, 10);
     }
 
     protected needChangeAttackDirection(item: Entity): boolean {

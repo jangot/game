@@ -1,6 +1,6 @@
 import AbstractEntity from './abstract';
 import Canvas from '../canvas'
-import { TICK_TIME } from './../../constant';
+import { TICK_TIME } from '../../constant';
 
 class Bullet extends AbstractEntity {
     protected timer:number;
@@ -18,7 +18,7 @@ class Bullet extends AbstractEntity {
     draw() {
         super.draw();
 
-        this.canvas.drawFillRound(this.getCenter(), 3, 'black');
+        this.canvas.drawFillRound(this.getCenter(), 3, 'white');
 
         return this;
     }

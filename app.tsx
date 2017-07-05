@@ -5,6 +5,7 @@ import Enemies from './class/entity/enemies/enemies';
 import Bullet from './class/entity/bullet';
 import Looser from './class/entity/looser';
 import Winner from './class/entity/winner';
+import Background from './class/entity/background';
 import Keyboard from './class/keyboard';
 import { TICK_TIME, ATTACK_STEPS } from './constant';
 
@@ -19,6 +20,7 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
     bullets = [];
     canvas = new Canvas(canvasElement);
 
+    let background = new Background(canvas);
     let player = new Man(canvas);
     let enemies = new Enemies(canvas);
 
