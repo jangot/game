@@ -1,5 +1,4 @@
 import Canvas from './canvas';
-import Entity from '../interface/entity';
 import AbstractEnemies from './entity/enemies/abstract';
 import Simple from './entity/enemies/simple';
 import Boss from './entity/enemies/boss';
@@ -27,7 +26,7 @@ class EnemiesFactory {
 
     [Symbol.iterator]() { return this };
 
-    public next(): { done: boolean, value: Entity } {
+    public next(): { done: boolean, value: AbstractEnemies } {
         this.column++;
         if (this.column === this.columns) {
             this.column = 0;
@@ -43,7 +42,7 @@ class EnemiesFactory {
 
         let coordinates = this.getCoordinates();
 
-        let value: Entity;
+        let value: AbstractEnemies;
 
         if (this.line === 0) {
             value = new Boss(this.canvas, coordinates.x, coordinates.y);

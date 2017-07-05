@@ -1,11 +1,9 @@
 import { remove, random } from 'lodash';
 import AbstractEntity from '../abstract';
 import AbstractEnemies from './abstract';
-import Coordinate from '../../../interface/coordinate';
 import Canvas from '../../canvas';
 import Entity from '../../../interface/entity';
 import EnemiesFactory from '../../enemiesFactory';
-import { TICK_TIME } from '../../../constant';
 
 class Enemies extends AbstractEntity {
 
@@ -29,9 +27,8 @@ class Enemies extends AbstractEntity {
     }
 
     protected timer: number;
-    protected items: Entity[];
-    protected attackItem: Entity;
-    protected attackPosition: Coordinate;
+    protected items: AbstractEnemies[];
+    protected attackItem: AbstractEnemies;
     protected direction: string = Enemies.RIGHT_DIRECTION;
 
     constructor(canvas:Canvas, x:number = 0, y:number = 0) {
@@ -70,34 +67,12 @@ class Enemies extends AbstractEntity {
     }
 
     attack() {
-        if (this.attackItem) {
-            return;
-        }
-
         this.attackItem = this.getRandomItem();
-        this.attackPosition = {
-            x: this.attackItem.x,
-            y: this.attackItem.y
-        };
-
-        let xDirection = Enemies.ATTACK_STEP_X;
-        let attackTimer = setInterval(() => {
-            this.attackItem.addY(Enemies.ATTACK_STEP_Y);
-
-            if (this.needChangeAttackDirection(this.attackItem)) {
-                xDirection *= -1
-            }
-            this.attackItem.addX(xDirection);
-            if (this.attackItem.y >= this.canvas.height) {
-
-                clearInterval(attackTimer);
-                this.finishAttack();
-            }
-        }, TICK_TIME)
+        this.attackItem.attack();
     }
 
     inAttack(): boolean {
-        return !!this.attackItem;
+        return !!this.attackItem && this.attackItem.inAttack;
     }
 
     destroy() {
@@ -107,45 +82,6 @@ class Enemies extends AbstractEntity {
             item.destroy();
         }
         clearInterval(this.timer);
-    }
-
-    protected finishAttack() {
-        let x = this.attackItem.x;
-        let y = this.attackItem.height * -1;
-
-        this.attackItem.setPosition(x, y);
-
-        let finishTimer = setInterval(() => {
-            let { x, y } = this.attackItem;
-
-            let aX = this.attackPosition.x;
-            let aY = this.attackPosition.y;
-
-            let yDuration = aY - y;
-            let xDuration = aX - x;
-
-            if (yDuration === 0 && xDuration === 0) {
-                clearInterval(finishTimer);
-                this.attackItem = null;
-                return;
-            }
-
-            if (yDuration !== 0) {
-                this.attackItem.addY(1);
-            }
-            if (xDuration > 0) {
-                this.attackItem.addX(1);
-            } else if (xDuration < 0) {
-                this.attackItem.addX(-1);
-            }
-        }, 10);
-    }
-
-    protected needChangeAttackDirection(item: Entity): boolean {
-        let isPositionInBorder = item.x <= 0 || item.x + item.width >= this.canvas.width;
-        let needX = random(0, 60) === 0;
-
-        return isPositionInBorder || needX;
     }
 
     protected moveAll() {
@@ -164,7 +100,7 @@ class Enemies extends AbstractEntity {
         this.width = this.canvas.width - left - right;
     }
 
-    protected getRandomItem(): Entity {
+    protected getRandomItem(): AbstractEnemies {
         let index = random(0, this.items.length - 1);
 
         return this.items[index];
@@ -254,23 +190,15 @@ class Enemies extends AbstractEntity {
 
         for (let item of this.items) {
             if (isY) {
-                if (item == this.attackItem) {
-                    this.attackPosition.y += size;
-                } else {
-                    item.addY(size);
-                }
+                item.addY(size);
             } else {
-                if (item == this.attackItem) {
-                    this.attackPosition.x += size;
-                } else {
-                    item.addX(size);
-                }
+                item.addX(size);
             }
         }
     }
 
-    protected getItems(): Entity[] {
-        let items = [];
+    protected getItems(): AbstractEnemies[] {
+        let items:AbstractEnemies[] = [];
 
         let enemiesFactory = new EnemiesFactory(this.canvas);
         for (let item of enemiesFactory) {

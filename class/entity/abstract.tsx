@@ -33,14 +33,14 @@ class Abstract implements Entity {
         return this;
     }
     addX(x: number):Entity {
-        this.x += x;
+        let newX = this.x + x;
 
-        return this;
+        return this.setPosition(newX, this.y);
     }
     addY(y: number):Entity {
-        this.y += y;
+        let newY = this.y + y;
 
-        return this;
+        return this.setPosition(this.x, newY);
     }
     destroy() {
         this.canvas.remove(this);
