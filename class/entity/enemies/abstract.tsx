@@ -11,24 +11,6 @@ class AbstractEnemies extends AbstractEntity {
         this.width = AbstractEnemies.WIDTH;
         this.height = AbstractEnemies.HEIGHT;
     }
-
-    draw() {
-        super.draw();
-
-        let start = {
-            x: this.x,
-            y: this.y
-        };
-        let end = {
-            x: this.width,
-            y: this.height
-        };
-
-        this.canvas.drawFillRect(start, end, 'orange');
-
-
-        return this;
-    }
 }
 
 export default AbstractEnemies;

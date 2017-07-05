@@ -21,8 +21,7 @@ class Man extends AbstractEntity {
     draw() {
         super.draw();
 
-        let ctx = this.canvas.getContext();
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        this.canvas.drawImage('man', this, this);
 
         return this;
     }

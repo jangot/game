@@ -1,12 +1,14 @@
 import { remove } from 'lodash';
 import Entity from '../interface/entity';
 import Coordinate from '../interface/coordinate';
+import Size from '../interface/size';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../constant';
 
 export default class Canvas {
     private entities: Entity[];
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
+    private images: any;
 
     public width: number;
     public height: number;
@@ -15,6 +17,7 @@ export default class Canvas {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
         this.entities = [];
+        this.images = {};
 
         this
             .setWidth(CANVAS_WIDTH)
@@ -104,6 +107,17 @@ export default class Canvas {
         ctx.fillStyle = color;
         ctx.fillRect(start.x, start.y, end.x, end.y);
         ctx.fill();
+
+        return this;
+    }
+
+    public drawImage(name: string, start: Coordinate, size: Size) {
+        if (!this.images[name]) {
+            this.images[name] = document.getElementById(name) as HTMLImageElement;
+        }
+
+        let ctx = this.getContext();
+        ctx.drawImage(this.images[name], start.x, start.y, size.width, size.height);
 
         return this;
     }

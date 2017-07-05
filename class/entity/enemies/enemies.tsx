@@ -154,6 +154,14 @@ class Enemies extends AbstractEntity {
         }
 
         this.moveToCurrentDirection();
+
+        let { top, left, right, bottom } = this.border;
+
+        this.x = left;
+        this.y = top;
+
+        this.height = this.canvas.height - top - bottom;
+        this.width = this.canvas.width - left - right;
     }
 
     protected getRandomItem(): Entity {

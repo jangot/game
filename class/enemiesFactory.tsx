@@ -2,11 +2,12 @@ import Canvas from './canvas';
 import Entity from '../interface/entity';
 import AbstractEnemies from './entity/enemies/abstract';
 import Simple from './entity/enemies/simple';
+import Boss from './entity/enemies/boss';
 import Coordinate from '../interface/coordinate';
 
 class EnemiesFactory {
     static ENEMIES_COUNT = 36;
-    static ENEMIES_MARGIN = 5;
+    static ENEMIES_MARGIN = 10;
 
     private canvas: Canvas;
     private columns: number;
@@ -20,6 +21,7 @@ class EnemiesFactory {
         this.columns = Math.ceil(
             canvas.width / (AbstractEnemies.WIDTH + EnemiesFactory.ENEMIES_MARGIN)
             ) - 2;
+
         this.lines = 5;
     }
 
@@ -41,9 +43,17 @@ class EnemiesFactory {
 
         let coordinates = this.getCoordinates();
 
+        let value: Entity;
+
+        if (this.line === 0) {
+            value = new Boss(this.canvas, coordinates.x, coordinates.y);
+        } else {
+            value = new Simple(this.canvas, coordinates.x, coordinates.y);
+        }
+
         return {
-            done: false,
-            value: new Simple(this.canvas, coordinates.x, coordinates.y)
+            value,
+            done: false
         }
     }
 
