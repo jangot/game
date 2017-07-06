@@ -6,7 +6,7 @@ class Boss extends AbstractEnemies {
         super(canvas, x, y);
 
         this.attackStepX = 3;
-        this.attackSpeedY = 6;
+        this.attackSpeedY = 4;
     }
     draw() {
         super.draw();

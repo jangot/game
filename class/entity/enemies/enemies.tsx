@@ -16,8 +16,6 @@ class Enemies extends AbstractEntity {
     static LEFT_BORDER = 5;
     static RIGHT_BORDER = 5;
     static MOVE_STEP = 10;
-    static ATTACK_STEP_X = 2;
-    static ATTACK_STEP_Y = 5;
 
     public get length() {
         return this.items.length;

@@ -22,7 +22,7 @@ class AbstractEnemies extends AbstractEntity {
         this.height = AbstractEnemies.HEIGHT;
 
         this.attackStepX = 2;
-        this.attackSpeedY = 3;
+        this.attackSpeedY = 2;
     }
 
     setPosition(x: number, y: number) {
