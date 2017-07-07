@@ -1,0 +1,1 @@
+{"version":3,"file":"simple.js","sourceRoot":"","sources":["../../../../class/entity/enemies/simple.tsx"],"names":[],"mappings":";;AAAA,yCAAyC;AAEzC,YAAa,SAAQ,kBAAe;IAChC,IAAI;QACA,KAAK,CAAC,IAAI,EAAE,CAAC;QAEb,IAAI,CAAC,MAAM,CAAC,SAAS,CAAC,gBAAgB,EAAE,IAAI,EAAE,IAAI,CAAC,CAAC;QAEpD,MAAM,CAAC,IAAI,CAAC;IAChB,CAAC;CACJ;AAED,kBAAe,MAAM,CAAC"}
