@@ -2,11 +2,13 @@ import { DEBUG } from '../../constant';
 import Entity from '../../interface/entity';
 import Canvas from '../canvas';
 
+let id = 1;
 class Abstract implements Entity {
     public x: number;
     public y: number;
-    public width:number;
-    public height:number;
+    public width: number;
+    public height: number;
+    public id: number;
 
     protected canvas: Canvas;
 
@@ -14,6 +16,7 @@ class Abstract implements Entity {
         this.canvas = canvas;
         this.canvas.add(this);
 
+        this.id = id++;
         this.x = x;
         this.y = y;
         this.width = 1;

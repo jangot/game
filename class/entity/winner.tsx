@@ -15,7 +15,7 @@ export default class Winner extends AbstractEntity {
 
         let context = this.canvas.getContext();
 
-        context.fillStyle = 'green';
+        context.fillStyle = 'yellow';
         context.font = '30px Arial';
         context.fillText('WINNER!', this.x, this.y);
 

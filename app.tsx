@@ -65,14 +65,11 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
             new Winner(canvas);
         }
 
-        if (!enemies.inAttack() && !inAttack) {
+        if (!enemies.inAttack()) {
             let time = attackSteps.shift() || 1;
             inAttack = true;
 
-            setTimeout(() => {
-                enemies.attack();
-                inAttack = false;
-            }, time * 1000)
+            enemies.attack(time);
         }
 
         canvas.draw();

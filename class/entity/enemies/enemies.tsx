@@ -4,6 +4,7 @@ import AbstractEnemies from './abstract';
 import Canvas from '../../canvas';
 import Entity from '../../../interface/entity';
 import EnemiesFactory from '../../enemiesFactory';
+import Coordinate from '../../../interface/coordinate';
 
 class Enemies extends AbstractEntity {
 
@@ -64,13 +65,18 @@ class Enemies extends AbstractEntity {
         return false;
     }
 
-    attack() {
+    attack(time: number) {
         this.attackItem = this.getRandomItem();
-        this.attackItem.attack();
+
+        setTimeout(() => {
+            this.attackItem.attack(() => {
+                this.attackItem = null;
+            });
+        }, time * 1000)
     }
 
     inAttack(): boolean {
-        return !!this.attackItem && this.attackItem.inAttack;
+        return !!this.attackItem;
     }
 
     destroy() {
@@ -132,14 +138,19 @@ class Enemies extends AbstractEntity {
         };
 
         for (let item of this.items) {
+            let coordinate = {
+                x: item.x,
+                y: item.y
+            };
+
             if (item === this.attackItem) {
-                continue;
+                coordinate = item.attackPosition;
             }
 
-            let left = item.x;
-            let right = item.x + AbstractEnemies.WIDTH;
-            let top = item.y;
-            let bottom = item.y + AbstractEnemies.HEIGHT;
+            let left = coordinate.x;
+            let right = coordinate.x + AbstractEnemies.WIDTH;
+            let top = coordinate.y;
+            let bottom = coordinate.y + AbstractEnemies.HEIGHT;
 
             if (left < result.left) {
                 result.left = left;

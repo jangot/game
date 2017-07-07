@@ -10,7 +10,7 @@ class AbstractEnemies extends AbstractEntity {
 
     public inAttack: boolean;
 
-    protected attackPosition: Coordinate;
+    public attackPosition: Coordinate;
     protected attackStepX: number;
     protected attackSpeedY: number;
 
@@ -52,8 +52,9 @@ class AbstractEnemies extends AbstractEntity {
         return this;
     }
 
-    attack() {
+    attack(cb: () => void) {
         if (this.inAttack) {
+            cb();
             return;
         }
 
@@ -70,7 +71,7 @@ class AbstractEnemies extends AbstractEntity {
             if (this.y >= this.canvas.height) {
 
                 clearInterval(attackTimer);
-                this.finishAttack();
+                this.finishAttack(cb);
             }
         }, TICK_TIME)
     }
@@ -82,7 +83,7 @@ class AbstractEnemies extends AbstractEntity {
         return isPositionInBorder || needX;
     }
 
-    protected finishAttack() {
+    protected finishAttack(cb: () => void) {
         let x = this.x;
         let y = this.height * -1;
 
@@ -101,6 +102,7 @@ class AbstractEnemies extends AbstractEntity {
             if (yDuration === 0 && xDuration === 0) {
                 clearInterval(finishTimer);
                 this.inAttack = false;
+                cb();
                 return;
             }
 
