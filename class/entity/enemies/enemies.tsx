@@ -4,7 +4,6 @@ import AbstractEnemies from './abstract';
 import Canvas from '../../canvas';
 import Entity from '../../../interface/entity';
 import EnemiesFactory from '../../enemiesFactory';
-import Coordinate from '../../../interface/coordinate';
 
 class Enemies extends AbstractEntity {
 
@@ -13,7 +12,7 @@ class Enemies extends AbstractEntity {
     static LEFT_BOTTOM_DIRECTION = 'lb';
     static RIGHT_BOTTOM_DIRECTION = 'rb';
 
-    static MOVE_TIME = 300;
+    static MOVE_TIME = 200;
     static LEFT_BORDER = 5;
     static RIGHT_BORDER = 5;
     static MOVE_STEP = 10;

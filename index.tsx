@@ -5,36 +5,26 @@ let canvasElement = document.getElementsByTagName('canvas')[0];
 let bodyElement = document.getElementById('body');
 let keyboard: Keyboard;
 
+let startButton = document.getElementById('start');
+let stopButton = document.getElementById('stop');
 
-// let ctx = canvasElement.getContext('2d');
-//
-//
-// let image = document.getElementById('man') as HTMLImageElement;
-// ctx.drawImage(image, 10, 10, 16, 16);
-// ctx.stroke();
-// ctx.fill();
-//
-// // ctx = canvasElement.getContext('2d');
-//
-// // ctx.beginPath();
-// ctx.arc(100, 100, 10, 0, 2 * Math.PI, false);
-// ctx.fillStyle = 'green';
-// ctx.strokeStyle = 'red';
-// ctx.fill();
-// ctx.stroke();
 
-document
-    .getElementById('start')
+startButton
     .addEventListener('click', () => {
         keyboard = new Keyboard(bodyElement);
         start(canvasElement, keyboard);
         canvasElement.style.display = 'block';
+
+        stopButton.style.display = 'inline';
+        startButton.style.display = 'none';
     });
 
-document
-    .getElementById('stop')
+stopButton
     .addEventListener('click', () => {
         stop();
         keyboard.destroy();
         canvasElement.style.display = 'none';
+
+        stopButton.style.display = 'none';
+        startButton.style.display = 'inline';
     });

@@ -9,7 +9,7 @@
         }
         canvas {
             background: white;
-            display: block;
+            display: none;
             margin: 0 auto;
             border: 1px green solid;
         }
@@ -20,6 +20,9 @@
             position: absolute;
             top: -200px;
             left: -300px;
+        }
+        #stop {
+            display: none;
         }
     </style>
 </head>
@@ -34,6 +37,10 @@
 <div class="panel">
     <button id="start">Start</button>
     <button id="stop">Stop</button>
+
+    <div>
+        Press left, right and space for fire.
+    </div>
 </div>
 <canvas id="canvas">Этот элемент не поддерживается</canvas>
 <script src="./dist/bundle.js"></script>
