@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const abstract_1 = require("./entity/enemies/abstract");
 const simple_1 = require("./entity/enemies/simple");
 const boss_1 = require("./entity/enemies/boss");
+const supper_boss_1 = require("./entity/enemies/supper-boss");
 class EnemiesFactory {
     constructor(canvas) {
         this.column = -1;
@@ -27,11 +28,15 @@ class EnemiesFactory {
         }
         let coordinates = this.getCoordinates();
         let value;
-        if (this.line === 0) {
-            value = new boss_1.default(this.canvas, coordinates.x, coordinates.y);
-        }
-        else {
-            value = new simple_1.default(this.canvas, coordinates.x, coordinates.y);
+        switch (this.line) {
+            case 0:
+                value = new supper_boss_1.default(this.canvas, coordinates.x, coordinates.y);
+                break;
+            case 1:
+                value = new boss_1.default(this.canvas, coordinates.x, coordinates.y);
+                break;
+            default:
+                value = new simple_1.default(this.canvas, coordinates.x, coordinates.y);
         }
         return {
             value,

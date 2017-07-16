@@ -2,6 +2,7 @@ import Canvas from './canvas';
 import AbstractEnemies from './entity/enemies/abstract';
 import Simple from './entity/enemies/simple';
 import Boss from './entity/enemies/boss';
+import SupperBoss from './entity/enemies/supper-boss';
 import Coordinate from '../interface/coordinate';
 
 class EnemiesFactory {
@@ -44,10 +45,15 @@ class EnemiesFactory {
 
         let value: AbstractEnemies;
 
-        if (this.line === 0) {
-            value = new Boss(this.canvas, coordinates.x, coordinates.y);
-        } else {
-            value = new Simple(this.canvas, coordinates.x, coordinates.y);
+        switch (this.line) {
+            case 0:
+                value = new SupperBoss(this.canvas, coordinates.x, coordinates.y);
+                break;
+            case 1:
+                value = new Boss(this.canvas, coordinates.x, coordinates.y);
+                break;
+            default:
+                value = new Simple(this.canvas, coordinates.x, coordinates.y);
         }
 
         return {

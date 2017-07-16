@@ -17651,6 +17651,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const abstract_1 = __webpack_require__(3);
 const simple_1 = __webpack_require__(13);
 const boss_1 = __webpack_require__(11);
+const supper_boss_1 = __webpack_require__(20);
 class EnemiesFactory {
     constructor(canvas) {
         this.column = -1;
@@ -17675,11 +17676,15 @@ class EnemiesFactory {
         }
         let coordinates = this.getCoordinates();
         let value;
-        if (this.line === 0) {
-            value = new boss_1.default(this.canvas, coordinates.x, coordinates.y);
-        }
-        else {
-            value = new simple_1.default(this.canvas, coordinates.x, coordinates.y);
+        switch (this.line) {
+            case 0:
+                value = new supper_boss_1.default(this.canvas, coordinates.x, coordinates.y);
+                break;
+            case 1:
+                value = new boss_1.default(this.canvas, coordinates.x, coordinates.y);
+                break;
+            default:
+                value = new simple_1.default(this.canvas, coordinates.x, coordinates.y);
         }
         return {
             value,
@@ -18179,6 +18184,29 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const abstract_1 = __webpack_require__(3);
+class SupperBoss extends abstract_1.default {
+    constructor(canvas, x = 0, y = 0) {
+        super(canvas, x, y);
+        this.attackStepX = 3;
+        this.attackSpeedY = 4;
+    }
+    draw() {
+        super.draw();
+        this.canvas.drawImage('enemies_supper_boss', this, this);
+        return this;
+    }
+}
+exports.default = SupperBoss;
 
 
 /***/ })
