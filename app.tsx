@@ -21,7 +21,7 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
     canvas = new Canvas(canvasElement);
 
     let background = new Background(canvas);
-    let player = new Man(canvas);
+    let player = new Man(canvas, 1);//canvas.width / 2);
     let enemies = new Enemies(canvas);
 
     keyboard
@@ -47,6 +47,8 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
     tickTimer = setInterval(tick, TICK_TIME);
 
     function tick() {
+
+
         for (let bullet of bullets) {
             let killed = enemies.killIfCross(bullet);
 
@@ -56,7 +58,10 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
         }
 
         let crossPlayer = enemies.killIfCross(player);
-        if (crossPlayer || enemies.border.bottom >= canvas.height) {
+        let crossBullet = enemies.isBulletCross(player);
+
+        // crossBullet = false;
+        if (crossPlayer || crossBullet || enemies.border.bottom >= canvas.height) {
             new Looser(canvas);
             clearInterval(tickTimer);
         } else if (enemies.length === 0) {

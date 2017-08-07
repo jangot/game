@@ -17,6 +17,8 @@ class Enemies extends AbstractEntity {
     static RIGHT_BORDER = 5;
     static MOVE_STEP = 10;
 
+    steps: number;
+
     public get length() {
         return this.items.length;
     };
@@ -24,7 +26,6 @@ class Enemies extends AbstractEntity {
         return this.getBorder();
     }
 
-    protected timer: number;
     protected items: AbstractEnemies[];
     protected attackItem: AbstractEnemies;
     protected direction: string = Enemies.RIGHT_DIRECTION;
@@ -35,10 +36,8 @@ class Enemies extends AbstractEntity {
         this.width = canvas.width - 20;
         this.height = 40;
 
+        this.steps = 1;
         this.items = this.getItems();
-        this.timer = setInterval(() => {
-            this.moveAll();
-        }, Enemies.MOVE_TIME);
     }
 
     draw() {
@@ -49,6 +48,16 @@ class Enemies extends AbstractEntity {
         }
 
         return this;
+    }
+
+    tick() {
+        super.tick();
+
+        this.steps++;
+        if (this.steps === 10) {
+            this.steps = 1;
+            this.moveAll();
+        }
     }
 
     killIfCross(entity: Entity): boolean {
@@ -78,13 +87,20 @@ class Enemies extends AbstractEntity {
         return !!this.attackItem;
     }
 
+    isBulletCross(entity: Entity) {
+        if (!this.attackItem) {
+            return false;
+        }
+
+        return this.attackItem.isBulletCross(entity);
+    }
+
     destroy() {
         super.destroy();
 
         for (let item of this.items) {
             item.destroy();
         }
-        clearInterval(this.timer);
     }
 
     protected moveAll() {

@@ -5,14 +5,13 @@ const bullet_1 = require("../entity/bullet");
 class Man extends abstract_1.default {
     constructor(canvas, x = 100, y = 100) {
         super(canvas, x, y);
-        this.width = 32;
+        this.width = 28;
         this.height = 32;
-        this.x = canvas.width / 2;
         this.y = canvas.height - this.height;
-        this.image = document.getElementById('man');
     }
     draw() {
         super.draw();
+        this.drawDebug();
         this.canvas.drawImage('man', this, this);
         return this;
     }

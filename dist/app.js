@@ -19,7 +19,7 @@ exports.start = function (canvasElement, keyboard) {
     bullets = [];
     canvas = new canvas_1.default(canvasElement);
     let background = new background_1.default(canvas);
-    let player = new man_1.default(canvas);
+    let player = new man_1.default(canvas, 1); //canvas.width / 2);
     let enemies = new enemies_1.default(canvas);
     keyboard
         .onKey(keyboard_1.default.KEY_LEFT, () => {
@@ -48,7 +48,9 @@ exports.start = function (canvasElement, keyboard) {
             }
         }
         let crossPlayer = enemies.killIfCross(player);
-        if (crossPlayer || enemies.border.bottom >= canvas.height) {
+        let crossBullet = enemies.isBulletCross(player);
+        // crossBullet = false;
+        if (crossPlayer || crossBullet || enemies.border.bottom >= canvas.height) {
             new looser_1.default(canvas);
             clearInterval(tickTimer);
         }

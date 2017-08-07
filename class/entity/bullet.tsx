@@ -4,6 +4,7 @@ import { TICK_TIME } from '../../constant';
 
 class Bullet extends AbstractEntity {
     protected timer:number;
+    protected direction: number;
 
     constructor(canvas: Canvas, x:number, y:number) {
         super(canvas, x, y);
@@ -11,21 +12,26 @@ class Bullet extends AbstractEntity {
         this.width = 6;
         this.height = 6;
 
-        this.timer = setInterval(() => {
-            this.addY(-5);
-        }, TICK_TIME /2);
+        this.direction = -1;
+    }
+    reverse() {
+        this.direction *= -1;
     }
     draw() {
         super.draw();
 
-        this.canvas.drawFillRound(this.getCenter(), 3, 'white');
+        console.log(`BULLET`, this.y);
+        this.canvas.drawFillRound(this.getCenter(), 3, 'gold');
 
         return this;
     }
-    destroy() {
-        super.destroy();
 
-        clearInterval(this.timer);
+    tick() {
+        super.tick();
+
+        let offset = 10 * this.direction;
+
+        this.addY(offset);
     }
 }
 

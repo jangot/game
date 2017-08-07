@@ -10,10 +10,8 @@ class Enemies extends abstract_1.default {
         this.direction = Enemies.RIGHT_DIRECTION;
         this.width = canvas.width - 20;
         this.height = 40;
+        this.steps = 1;
         this.items = this.getItems();
-        this.timer = setInterval(() => {
-            this.moveAll();
-        }, Enemies.MOVE_TIME);
     }
     get length() {
         return this.items.length;
@@ -28,6 +26,14 @@ class Enemies extends abstract_1.default {
             item.draw();
         }
         return this;
+    }
+    tick() {
+        super.tick();
+        this.steps++;
+        if (this.steps === 10) {
+            this.steps = 1;
+            this.moveAll();
+        }
     }
     killIfCross(entity) {
         for (let item of this.items) {
@@ -50,12 +56,17 @@ class Enemies extends abstract_1.default {
     inAttack() {
         return !!this.attackItem;
     }
+    isBulletCross(entity) {
+        if (!this.attackItem) {
+            return false;
+        }
+        return this.attackItem.isBulletCross(entity);
+    }
     destroy() {
         super.destroy();
         for (let item of this.items) {
             item.destroy();
         }
-        clearInterval(this.timer);
     }
     moveAll() {
         if (this.needUpdateDirection()) {

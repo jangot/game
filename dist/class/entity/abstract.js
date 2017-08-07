@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const constant_1 = require("../../constant");
+const isCross_1 = require("../../lib/isCross");
 let id = 1;
 class Abstract {
     constructor(canvas, x = 0, y = 0) {
@@ -35,8 +36,9 @@ class Abstract {
         this.canvas.remove(this);
     }
     isCross(entity) {
-        return this.isCrossX(entity) && this.isCrossY(entity);
+        return isCross_1.default(this, entity);
     }
+    tick() { }
     drawDebug() {
         let start = {
             x: this.x,
@@ -53,23 +55,6 @@ class Abstract {
             x: this.x + this.width / 2,
             y: this.y + this.height / 2
         };
-    }
-    isCrossX(entity) {
-        let point1 = entity.x;
-        let point2 = entity.x + entity.width;
-        let x1 = this.x;
-        let x2 = this.x + this.width;
-        return this.isPointBetween(point1, x1, x2) || this.isPointBetween(point2, x1, x2);
-    }
-    isCrossY(entity) {
-        let point1 = entity.y;
-        let point2 = entity.y + entity.height;
-        let y1 = this.y;
-        let y2 = this.y + this.height;
-        return this.isPointBetween(point1, y1, y2) || this.isPointBetween(point2, y1, y2);
-    }
-    isPointBetween(point, c1, c2) {
-        return c1 <= point && point <= c2;
     }
 }
 exports.default = Abstract;

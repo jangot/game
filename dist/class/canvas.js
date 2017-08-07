@@ -33,6 +33,7 @@ class Canvas {
     draw() {
         this.getContext().clearRect(0, 0, this.canvas.width, this.canvas.height);
         for (let entity of this.entities) {
+            entity.tick();
             entity.draw();
         }
         return this;

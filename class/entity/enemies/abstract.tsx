@@ -1,5 +1,6 @@
 import { random } from 'lodash';
 import AbstractEntity from '../abstract';
+import Entity from '../../../interface/entity';
 import Canvas from '../../canvas'
 import Coordinate from '../../../interface/coordinate';
 import { TICK_TIME } from '../../../constant';
@@ -13,6 +14,7 @@ class AbstractEnemies extends AbstractEntity {
     public attackPosition: Coordinate;
     protected attackStepX: number;
     protected attackSpeedY: number;
+    // protected xDirection: number
 
     constructor(canvas: Canvas, x:number = 0, y:number = 0) {
         super(canvas, x, y);
@@ -51,6 +53,26 @@ class AbstractEnemies extends AbstractEntity {
 
         return this;
     }
+    //
+    // tick() {
+    //     super.tick();
+    //
+    //     if (!this.inAttack) {
+    //         return;
+    //     }
+    //
+    //     this.y += this.attackSpeedY;
+    //
+    //     if (this.needChangeAttackDirection()) {
+    //         xDirection *= -1
+    //     }
+    //     this.x += xDirection;
+    //     if (this.y >= this.canvas.height) {
+    //
+    //         clearInterval(attackTimer);
+    //         this.finishAttack(cb);
+    //     }
+    // }
 
     attack(cb: () => void) {
         if (this.inAttack) {
@@ -74,6 +96,10 @@ class AbstractEnemies extends AbstractEntity {
                 this.finishAttack(cb);
             }
         }, TICK_TIME)
+    }
+
+    isBulletCross(entity:Entity) {
+        return false;
     }
 
     protected needChangeAttackDirection(): boolean {

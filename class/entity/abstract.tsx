@@ -1,5 +1,9 @@
+import { concat } from 'lodash';
+
 import { DEBUG } from '../../constant';
 import Entity from '../../interface/entity';
+import isCross from '../../lib/isCross';
+import Сoordinate from '../../interface/coordinate';
 import Canvas from '../canvas';
 
 let id = 1;
@@ -48,9 +52,12 @@ class Abstract implements Entity {
     destroy() {
         this.canvas.remove(this);
     }
-    isCross(entity:Entity) {
-        return this.isCrossX(entity) && this.isCrossY(entity);
+    isCross(entity: Entity): boolean {
+        return isCross(this, entity);
+
     }
+
+    tick() {}
 
     protected drawDebug() {
         let start = {
@@ -72,27 +79,6 @@ class Abstract implements Entity {
         }
     }
 
-    protected isCrossX(entity:Entity):boolean {
-        let point1 = entity.x;
-        let point2 = entity.x + entity.width;
-
-        let x1 = this.x;
-        let x2 = this.x + this.width;
-
-        return this.isPointBetween(point1, x1, x2) || this.isPointBetween(point2, x1, x2);
-    }
-    protected isCrossY(entity:Entity):boolean {
-        let point1 = entity.y;
-        let point2 = entity.y + entity.height;
-
-        let y1 = this.y;
-        let y2 = this.y + this.height;
-
-        return this.isPointBetween(point1, y1, y2) || this.isPointBetween(point2, y1, y2);
-    }
-    protected isPointBetween(point:number, c1:number, c2:number):boolean {
-        return c1 <= point && point <= c2;
-    }
 }
 
 export default Abstract;

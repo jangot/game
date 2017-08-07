@@ -4,6 +4,7 @@ const lodash_1 = require("lodash");
 const abstract_1 = require("../abstract");
 const constant_1 = require("../../../constant");
 class AbstractEnemies extends abstract_1.default {
+    // protected xDirection: number
     constructor(canvas, x = 0, y = 0) {
         super(canvas, x, y);
         this.attackPosition = { x, y };
@@ -35,6 +36,26 @@ class AbstractEnemies extends abstract_1.default {
         this.attackPosition.y += y;
         return this;
     }
+    //
+    // tick() {
+    //     super.tick();
+    //
+    //     if (!this.inAttack) {
+    //         return;
+    //     }
+    //
+    //     this.y += this.attackSpeedY;
+    //
+    //     if (this.needChangeAttackDirection()) {
+    //         xDirection *= -1
+    //     }
+    //     this.x += xDirection;
+    //     if (this.y >= this.canvas.height) {
+    //
+    //         clearInterval(attackTimer);
+    //         this.finishAttack(cb);
+    //     }
+    // }
     attack(cb) {
         if (this.inAttack) {
             cb();
@@ -53,6 +74,9 @@ class AbstractEnemies extends abstract_1.default {
                 this.finishAttack(cb);
             }
         }, constant_1.TICK_TIME);
+    }
+    isBulletCross(entity) {
+        return false;
     }
     needChangeAttackDirection() {
         let isPositionInBorder = this.x <= 0 || this.x + this.width >= this.canvas.width;

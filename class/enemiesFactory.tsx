@@ -22,7 +22,7 @@ class EnemiesFactory {
             canvas.width / (AbstractEnemies.WIDTH + EnemiesFactory.ENEMIES_MARGIN)
             ) - 2;
 
-        this.lines = 5;
+        this.lines = 1;
     }
 
     [Symbol.iterator]() { return this };

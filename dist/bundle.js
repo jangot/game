@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -74,6 +74,7 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const constant_1 = __webpack_require__(1);
+const isCross_1 = __webpack_require__(21);
 let id = 1;
 class Abstract {
     constructor(canvas, x = 0, y = 0) {
@@ -108,8 +109,9 @@ class Abstract {
         this.canvas.remove(this);
     }
     isCross(entity) {
-        return this.isCrossX(entity) && this.isCrossY(entity);
+        return isCross_1.default(this, entity);
     }
+    tick() { }
     drawDebug() {
         let start = {
             x: this.x,
@@ -127,23 +129,6 @@ class Abstract {
             y: this.y + this.height / 2
         };
     }
-    isCrossX(entity) {
-        let point1 = entity.x;
-        let point2 = entity.x + entity.width;
-        let x1 = this.x;
-        let x2 = this.x + this.width;
-        return this.isPointBetween(point1, x1, x2) || this.isPointBetween(point2, x1, x2);
-    }
-    isCrossY(entity) {
-        let point1 = entity.y;
-        let point2 = entity.y + entity.height;
-        let y1 = this.y;
-        let y2 = this.y + this.height;
-        return this.isPointBetween(point1, y1, y2) || this.isPointBetween(point2, y1, y2);
-    }
-    isPointBetween(point, c1, c2) {
-        return c1 <= point && point <= c2;
-    }
 }
 exports.default = Abstract;
 
@@ -160,7 +145,7 @@ exports.TICK_TIME = 20;
 exports.CANVAS_WIDTH = 380;
 exports.CANVAS_HEIGHT = 500;
 exports.ATTACK_STEPS = [
-    6, 3, 2, 1
+    1 //6, 3, 2, 1
 ];
 
 
@@ -17254,7 +17239,7 @@ exports.ATTACK_STEPS = [
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18), __webpack_require__(19)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19), __webpack_require__(20)(module)))
 
 /***/ }),
 /* 3 */
@@ -17267,6 +17252,7 @@ const lodash_1 = __webpack_require__(2);
 const abstract_1 = __webpack_require__(0);
 const constant_1 = __webpack_require__(1);
 class AbstractEnemies extends abstract_1.default {
+    // protected xDirection: number
     constructor(canvas, x = 0, y = 0) {
         super(canvas, x, y);
         this.attackPosition = { x, y };
@@ -17298,6 +17284,26 @@ class AbstractEnemies extends abstract_1.default {
         this.attackPosition.y += y;
         return this;
     }
+    //
+    // tick() {
+    //     super.tick();
+    //
+    //     if (!this.inAttack) {
+    //         return;
+    //     }
+    //
+    //     this.y += this.attackSpeedY;
+    //
+    //     if (this.needChangeAttackDirection()) {
+    //         xDirection *= -1
+    //     }
+    //     this.x += xDirection;
+    //     if (this.y >= this.canvas.height) {
+    //
+    //         clearInterval(attackTimer);
+    //         this.finishAttack(cb);
+    //     }
+    // }
     attack(cb) {
         if (this.inAttack) {
             cb();
@@ -17316,6 +17322,9 @@ class AbstractEnemies extends abstract_1.default {
                 this.finishAttack(cb);
             }
         }, constant_1.TICK_TIME);
+    }
+    isBulletCross(entity) {
+        return false;
     }
     needChangeAttackDirection() {
         let isPositionInBorder = this.x <= 0 || this.x + this.width >= this.canvas.width;
@@ -17369,7 +17378,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bind_decorator_1 = __webpack_require__(6);
+const bind_decorator_1 = __webpack_require__(7);
 class Keyboard {
     constructor(body) {
         this.inProgress = {};
@@ -17431,13 +17440,46 @@ exports.default = Keyboard;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const abstract_1 = __webpack_require__(0);
+class Bullet extends abstract_1.default {
+    constructor(canvas, x, y) {
+        super(canvas, x, y);
+        this.width = 6;
+        this.height = 6;
+        this.direction = -1;
+    }
+    reverse() {
+        this.direction *= -1;
+    }
+    draw() {
+        super.draw();
+        console.log(`BULLET`, this.y);
+        this.canvas.drawFillRound(this.getCenter(), 3, 'gold');
+        return this;
+    }
+    tick() {
+        super.tick();
+        let offset = 10 * this.direction;
+        this.addY(offset);
+    }
+}
+exports.default = Bullet;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __webpack_require__(2);
-const canvas_1 = __webpack_require__(7);
-const man_1 = __webpack_require__(15);
+const canvas_1 = __webpack_require__(8);
+const man_1 = __webpack_require__(16);
 const enemies_1 = __webpack_require__(12);
-const looser_1 = __webpack_require__(14);
-const winner_1 = __webpack_require__(16);
-const background_1 = __webpack_require__(9);
+const looser_1 = __webpack_require__(15);
+const winner_1 = __webpack_require__(17);
+const background_1 = __webpack_require__(10);
 const keyboard_1 = __webpack_require__(4);
 const constant_1 = __webpack_require__(1);
 let tickTimer;
@@ -17450,7 +17492,7 @@ exports.start = function (canvasElement, keyboard) {
     bullets = [];
     canvas = new canvas_1.default(canvasElement);
     let background = new background_1.default(canvas);
-    let player = new man_1.default(canvas);
+    let player = new man_1.default(canvas, 1); //canvas.width / 2);
     let enemies = new enemies_1.default(canvas);
     keyboard
         .onKey(keyboard_1.default.KEY_LEFT, () => {
@@ -17479,7 +17521,9 @@ exports.start = function (canvasElement, keyboard) {
             }
         }
         let crossPlayer = enemies.killIfCross(player);
-        if (crossPlayer || enemies.border.bottom >= canvas.height) {
+        let crossBullet = enemies.isBulletCross(player);
+        // crossBullet = false;
+        if (crossPlayer || crossBullet || enemies.border.bottom >= canvas.height) {
             new looser_1.default(canvas);
             clearInterval(tickTimer);
         }
@@ -17509,7 +17553,7 @@ exports.stop = function () {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17543,7 +17587,7 @@ exports.default = bind;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17582,6 +17626,7 @@ class Canvas {
     draw() {
         this.getContext().clearRect(0, 0, this.canvas.width, this.canvas.height);
         for (let entity of this.entities) {
+            entity.tick();
             entity.draw();
         }
         return this;
@@ -17642,7 +17687,7 @@ exports.default = Canvas;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17651,14 +17696,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const abstract_1 = __webpack_require__(3);
 const simple_1 = __webpack_require__(13);
 const boss_1 = __webpack_require__(11);
-const supper_boss_1 = __webpack_require__(20);
+const supper_boss_1 = __webpack_require__(14);
 class EnemiesFactory {
     constructor(canvas) {
         this.column = -1;
         this.line = 0;
         this.canvas = canvas;
         this.columns = Math.ceil(canvas.width / (abstract_1.default.WIDTH + EnemiesFactory.ENEMIES_MARGIN)) - 2;
-        this.lines = 5;
+        this.lines = 1;
     }
     [Symbol.iterator]() { return this; }
     ;
@@ -17703,7 +17748,7 @@ exports.default = EnemiesFactory;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17731,37 +17776,6 @@ class Background extends abstract_1.default {
     }
 }
 exports.default = Background;
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const abstract_1 = __webpack_require__(0);
-const constant_1 = __webpack_require__(1);
-class Bullet extends abstract_1.default {
-    constructor(canvas, x, y) {
-        super(canvas, x, y);
-        this.width = 6;
-        this.height = 6;
-        this.timer = setInterval(() => {
-            this.addY(-5);
-        }, constant_1.TICK_TIME / 2);
-    }
-    draw() {
-        super.draw();
-        this.canvas.drawFillRound(this.getCenter(), 3, 'white');
-        return this;
-    }
-    destroy() {
-        super.destroy();
-        clearInterval(this.timer);
-    }
-}
-exports.default = Bullet;
 
 
 /***/ }),
@@ -17797,17 +17811,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __webpack_require__(2);
 const abstract_1 = __webpack_require__(0);
 const abstract_2 = __webpack_require__(3);
-const enemiesFactory_1 = __webpack_require__(8);
+const enemiesFactory_1 = __webpack_require__(9);
 class Enemies extends abstract_1.default {
     constructor(canvas, x = 0, y = 0) {
         super(canvas, x, y);
         this.direction = Enemies.RIGHT_DIRECTION;
         this.width = canvas.width - 20;
         this.height = 40;
+        this.steps = 1;
         this.items = this.getItems();
-        this.timer = setInterval(() => {
-            this.moveAll();
-        }, Enemies.MOVE_TIME);
     }
     get length() {
         return this.items.length;
@@ -17822,6 +17834,14 @@ class Enemies extends abstract_1.default {
             item.draw();
         }
         return this;
+    }
+    tick() {
+        super.tick();
+        this.steps++;
+        if (this.steps === 10) {
+            this.steps = 1;
+            this.moveAll();
+        }
     }
     killIfCross(entity) {
         for (let item of this.items) {
@@ -17844,12 +17864,17 @@ class Enemies extends abstract_1.default {
     inAttack() {
         return !!this.attackItem;
     }
+    isBulletCross(entity) {
+        if (!this.attackItem) {
+            return false;
+        }
+        return this.attackItem.isBulletCross(entity);
+    }
     destroy() {
         super.destroy();
         for (let item of this.items) {
             item.destroy();
         }
-        clearInterval(this.timer);
     }
     moveAll() {
         if (this.needUpdateDirection()) {
@@ -17994,6 +18019,70 @@ exports.default = Simple;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const lodash_1 = __webpack_require__(2);
+const abstract_1 = __webpack_require__(3);
+const bullet_1 = __webpack_require__(5);
+class SupperBoss extends abstract_1.default {
+    constructor(canvas, x = 0, y = 0) {
+        super(canvas, x, y);
+        this.attackStepX = 3;
+        this.attackSpeedY = 4;
+    }
+    draw() {
+        super.draw();
+        this.canvas.drawImage('enemies_supper_boss', this, this);
+        if (this.inAttack && !this.bullet) {
+            this.fire();
+        }
+        return this;
+    }
+    tick() {
+        super.tick();
+        if (this.bullet) {
+            if (this.bullet.y > this.canvas.height) {
+                this.bullet.destroy();
+                this.bullet = null;
+            }
+        }
+    }
+    fire() {
+        let needFire = lodash_1.random(0, 100) === 0;
+        if (needFire) {
+            let x = this.x + this.width / 2;
+            let y = this.y + this.height;
+            this.bullet = new bullet_1.default(this.canvas, x, y);
+            this.bullet.reverse();
+        }
+    }
+    isBulletCross(entity) {
+        if (!this.bullet) {
+            return false;
+        }
+        let isCross = this.bullet.isCross(entity);
+        console.log(this.bullet.x, this.bullet.y);
+        if (this.bullet.y > this.canvas.height - 100) {
+            console.log(`---------->>`, this.canvas.height);
+        }
+        console.log(`isCross`, isCross);
+        return isCross;
+    }
+    destroy() {
+        if (this.bullet) {
+            this.bullet.destroy();
+        }
+        super.destroy();
+    }
+}
+exports.default = SupperBoss;
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 const abstract_1 = __webpack_require__(0);
 class Looser extends abstract_1.default {
     constructor(canvas, x = 0, y = 0) {
@@ -18014,25 +18103,24 @@ exports.default = Looser;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const abstract_1 = __webpack_require__(0);
-const bullet_1 = __webpack_require__(10);
+const bullet_1 = __webpack_require__(5);
 class Man extends abstract_1.default {
     constructor(canvas, x = 100, y = 100) {
         super(canvas, x, y);
-        this.width = 32;
+        this.width = 28;
         this.height = 32;
-        this.x = canvas.width / 2;
         this.y = canvas.height - this.height;
-        this.image = document.getElementById('man');
     }
     draw() {
         super.draw();
+        this.drawDebug();
         this.canvas.drawImage('man', this, this);
         return this;
     }
@@ -18073,7 +18161,7 @@ exports.default = Man;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18100,13 +18188,13 @@ exports.default = Winner;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = __webpack_require__(5);
+const app_1 = __webpack_require__(6);
 const keyboard_1 = __webpack_require__(4);
 let canvasElement = document.getElementsByTagName('canvas')[0];
 let bodyElement = document.getElementById('body');
@@ -18132,7 +18220,7 @@ stopButton
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 var g;
@@ -18159,7 +18247,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -18187,26 +18275,31 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const abstract_1 = __webpack_require__(3);
-class SupperBoss extends abstract_1.default {
-    constructor(canvas, x = 0, y = 0) {
-        super(canvas, x, y);
-        this.attackStepX = 3;
-        this.attackSpeedY = 4;
-    }
-    draw() {
-        super.draw();
-        this.canvas.drawImage('enemies_supper_boss', this, this);
-        return this;
-    }
+function default_1(a, b) {
+    let projectionWidth = getX(a, b);
+    let projectionHeight = getY(a, b);
+    let differentWidth = a.width + b.width - projectionWidth;
+    let differentHeight = a.height + b.height - projectionHeight;
+    return differentWidth > 0 && differentHeight > 0;
 }
-exports.default = SupperBoss;
+exports.default = default_1;
+function getX(a, b) {
+    let result = [a.x, a.x + a.width, b.x, b.x + b.width].sort(sort);
+    return result[3] - result[0];
+}
+function getY(a, b) {
+    let result = [a.y, a.y + a.height, b.y, b.y + b.height].sort(sort);
+    return result[3] - result[0];
+}
+function sort(a, b) {
+    return a - b;
+}
 
 
 /***/ })

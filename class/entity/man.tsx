@@ -6,20 +6,17 @@ class Man extends AbstractEntity {
     static STEP = 5;
     static GUN_LENGTH = 16;
 
-    protected image: HTMLImageElement;
-
     constructor(canvas: Canvas, x:number = 100, y:number = 100) {
         super(canvas, x, y);
 
-        this.width = 32;
+        this.width = 28;
         this.height = 32;
 
-        this.x = canvas.width / 2;
         this.y = canvas.height - this.height;
-        this.image = document.getElementById('man') as HTMLImageElement;
     }
     draw() {
         super.draw();
+        this.drawDebug();
 
         this.canvas.drawImage('man', this, this);
 
