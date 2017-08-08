@@ -17697,6 +17697,9 @@ class EnemiesFactory {
         this.columns = Math.ceil(canvas.width / (abstract_1.default.WIDTH + EnemiesFactory.ENEMIES_MARGIN)) - 2;
         this.lines = 4;
     }
+    get enemiesInLine() {
+        return this.columns;
+    }
     [Symbol.iterator]() { return this; }
     ;
     next() {
@@ -17880,7 +17883,11 @@ class Enemies extends abstract_1.default {
         this.width = this.canvas.width - left - right;
     }
     getRandomItem() {
-        let index = lodash_1.random(0, this.items.length - 1);
+        let last = this.items.length - 1;
+        let first = last - this.enemiesFactory.enemiesInLine;
+        if (first < 0)
+            first = 0;
+        let index = lodash_1.random(first, last);
         return this.items[index];
     }
     needUpdateDirection() {
@@ -17968,8 +17975,8 @@ class Enemies extends abstract_1.default {
     }
     getItems() {
         let items = [];
-        let enemiesFactory = new enemiesFactory_1.default(this.canvas);
-        for (let item of enemiesFactory) {
+        this.enemiesFactory = new enemiesFactory_1.default(this.canvas);
+        for (let item of this.enemiesFactory) {
             items.push(item);
         }
         return items;

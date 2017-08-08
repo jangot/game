@@ -18,6 +18,7 @@ class Enemies extends AbstractEntity {
     static MOVE_STEP = 10;
 
     steps: number;
+    enemiesFactory: EnemiesFactory;
 
     public get length() {
         return this.items.length;
@@ -118,7 +119,11 @@ class Enemies extends AbstractEntity {
     }
 
     protected getRandomItem(): AbstractEnemies {
-        let index = random(0, this.items.length - 1);
+        let last = this.items.length - 1;
+        let first = last - this.enemiesFactory.enemiesInLine;
+        if (first < 0) first = 0;
+
+        let index = random(first, last);
 
         return this.items[index];
     }
@@ -222,8 +227,8 @@ class Enemies extends AbstractEntity {
     protected getItems(): AbstractEnemies[] {
         let items:AbstractEnemies[] = [];
 
-        let enemiesFactory = new EnemiesFactory(this.canvas);
-        for (let item of enemiesFactory) {
+        this.enemiesFactory = new EnemiesFactory(this.canvas);
+        for (let item of this.enemiesFactory) {
             items.push(item);
         }
         return items;

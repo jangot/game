@@ -12,6 +12,9 @@ class EnemiesFactory {
         this.columns = Math.ceil(canvas.width / (abstract_1.default.WIDTH + EnemiesFactory.ENEMIES_MARGIN)) - 2;
         this.lines = 4;
     }
+    get enemiesInLine() {
+        return this.columns;
+    }
     [Symbol.iterator]() { return this; }
     ;
     next() {

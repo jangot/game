@@ -16,6 +16,10 @@ class EnemiesFactory {
     private column = -1;
     private line = 0;
 
+    public get enemiesInLine() {
+        return this.columns;
+    }
+
     constructor(canvas: Canvas) {
         this.canvas = canvas;
         this.columns = Math.ceil(
