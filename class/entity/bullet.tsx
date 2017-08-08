@@ -20,7 +20,6 @@ class Bullet extends AbstractEntity {
     draw() {
         super.draw();
 
-        console.log(`BULLET`, this.y);
         this.canvas.drawFillRound(this.getCenter(), 3, 'gold');
 
         return this;

@@ -33,6 +33,9 @@ class Abstract implements Entity {
 
         return this;
     }
+
+    tick() {}
+
     setPosition(x: number, y: number):Entity {
         this.x = x;
         this.y = y;
@@ -54,10 +57,7 @@ class Abstract implements Entity {
     }
     isCross(entity: Entity): boolean {
         return isCross(this, entity);
-
     }
-
-    tick() {}
 
     protected drawDebug() {
         let start = {

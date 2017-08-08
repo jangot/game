@@ -50,14 +50,7 @@ class SupperBoss extends AbstractEnemies {
             return false;
         }
 
-        let isCross = this.bullet.isCross(entity);
-
-        console.log(this.bullet.x, this.bullet.y);
-        if (this.bullet.y > this.canvas.height - 100) {
-            console.log(`---------->>`, this.canvas.height);
-        }
-        console.log(`isCross`, isCross);
-        return isCross;
+        return this.bullet.isCross(entity);
     }
     destroy() {
         if (this.bullet) {

@@ -70,6 +70,7 @@ exports.start = function (canvasElement, keyboard) {
         lodash_1.remove(bullets, bullet);
         bullet.destroy();
     }
+    return tick;
 };
 exports.stop = function () {
     clearInterval(tickTimer);

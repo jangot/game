@@ -13,7 +13,6 @@ class Bullet extends abstract_1.default {
     }
     draw() {
         super.draw();
-        console.log(`BULLET`, this.y);
         this.canvas.drawFillRound(this.getCenter(), 3, 'gold');
         return this;
     }

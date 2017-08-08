@@ -47,8 +47,6 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
     tickTimer = setInterval(tick, TICK_TIME);
 
     function tick() {
-
-
         for (let bullet of bullets) {
             let killed = enemies.killIfCross(bullet);
 
@@ -84,6 +82,8 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
         remove(bullets, bullet);
         bullet.destroy();
     }
+
+    return tick;
 };
 
 export let stop = function () {

@@ -19,6 +19,7 @@ class Abstract {
         }
         return this;
     }
+    tick() { }
     setPosition(x, y) {
         this.x = x;
         this.y = y;
@@ -38,7 +39,6 @@ class Abstract {
     isCross(entity) {
         return isCross_1.default(this, entity);
     }
-    tick() { }
     drawDebug() {
         let start = {
             x: this.x,

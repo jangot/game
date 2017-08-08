@@ -9,12 +9,18 @@ class AbstractEnemies extends AbstractEntity {
     static WIDTH = 20;
     static HEIGHT = 30;
 
-    public inAttack: boolean;
+    public get inAttack() {
+        return this.inFlyingAttack || this.inFinishingAttack;
+    }
 
     public attackPosition: Coordinate;
+
+    protected inFlyingAttack: boolean;
+    protected inFinishingAttack: boolean;
     protected attackStepX: number;
     protected attackSpeedY: number;
-    // protected xDirection: number
+    protected xDirection: number;
+    protected cb: any;
 
     constructor(canvas: Canvas, x:number = 0, y:number = 0) {
         super(canvas, x, y);
@@ -53,26 +59,24 @@ class AbstractEnemies extends AbstractEntity {
 
         return this;
     }
-    //
-    // tick() {
-    //     super.tick();
-    //
-    //     if (!this.inAttack) {
-    //         return;
-    //     }
-    //
-    //     this.y += this.attackSpeedY;
-    //
-    //     if (this.needChangeAttackDirection()) {
-    //         xDirection *= -1
-    //     }
-    //     this.x += xDirection;
-    //     if (this.y >= this.canvas.height) {
-    //
-    //         clearInterval(attackTimer);
-    //         this.finishAttack(cb);
-    //     }
-    // }
+
+    draw() {
+        super.draw();
+
+        return this;
+    }
+
+    tick() {
+        super.tick();
+
+        if (this.inFinishingAttack) {
+            this.finishAttack();
+        }
+
+        if (this.inFlyingAttack) {
+            this.flyingAttack();
+        }
+    }
 
     attack(cb: () => void) {
         if (this.inAttack) {
@@ -80,22 +84,9 @@ class AbstractEnemies extends AbstractEntity {
             return;
         }
 
-        this.inAttack = true;
-
-        let xDirection = this.attackStepX;
-        let attackTimer = setInterval(() => {
-            this.y += this.attackSpeedY;
-
-            if (this.needChangeAttackDirection()) {
-                xDirection *= -1
-            }
-            this.x += xDirection;
-            if (this.y >= this.canvas.height) {
-
-                clearInterval(attackTimer);
-                this.finishAttack(cb);
-            }
-        }, TICK_TIME)
+        this.inFlyingAttack = true;
+        this.xDirection = this.attackStepX;
+        this.cb = cb;
     }
 
     isBulletCross(entity:Entity) {
@@ -109,38 +100,52 @@ class AbstractEnemies extends AbstractEntity {
         return isPositionInBorder || needX;
     }
 
-    protected finishAttack(cb: () => void) {
-        let x = this.x;
-        let y = this.height * -1;
+    protected flyingAttack() {
+        this.y += this.attackSpeedY;
 
-        this.x = x;
-        this.y = y;
+        if (this.needChangeAttackDirection()) {
+            this.xDirection *= -1
+        }
+        this.x += this.xDirection;
+        if (this.y >= this.canvas.height) {
+            this.inFlyingAttack = false;
+            this.inFinishingAttack = true;
 
-        let finishTimer = setInterval(() => {
-            let { x, y } = this;
+            this.y = this.height * -1;
+        }
+    }
 
-            let aX = this.attackPosition.x;
-            let aY = this.attackPosition.y;
+    protected finishAttack() {
+        const FINISHING_STEP = 6;
 
-            let yDuration = aY - y;
-            let xDuration = aX - x;
+        let { x, y } = this;
 
-            if (yDuration === 0 && xDuration === 0) {
-                clearInterval(finishTimer);
-                this.inAttack = false;
-                cb();
-                return;
-            }
+        let aX = this.attackPosition.x;
+        let aY = this.attackPosition.y;
 
-            if (yDuration !== 0) {
-                this.y += 1;
-            }
-            if (xDuration > 0) {
-                this.x += 1;
-            } else if (xDuration < 0) {
-                this.x -= 1;
-            }
-        }, 5);
+        let yDuration = aY - y;
+        let xDuration = aX - x;
+
+        if (yDuration < FINISHING_STEP && Math.abs(xDuration) < FINISHING_STEP) {
+            this.x = this.attackPosition.x;
+            this.y = this.attackPosition.y;
+
+            this.inFinishingAttack = false;
+
+            this.cb();
+            this.cb = null;
+
+            return;
+        }
+
+        if (yDuration !== 0) {
+            this.y += FINISHING_STEP;
+        }
+        if (xDuration > 0) {
+            this.x += FINISHING_STEP;
+        } else if (xDuration < 0) {
+            this.x -= FINISHING_STEP;
+        }
     }
 }
 

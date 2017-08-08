@@ -92,6 +92,7 @@ class Abstract {
         }
         return this;
     }
+    tick() { }
     setPosition(x, y) {
         this.x = x;
         this.y = y;
@@ -111,7 +112,6 @@ class Abstract {
     isCross(entity) {
         return isCross_1.default(this, entity);
     }
-    tick() { }
     drawDebug() {
         let start = {
             x: this.x,
@@ -17250,9 +17250,7 @@ exports.ATTACK_STEPS = [
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __webpack_require__(2);
 const abstract_1 = __webpack_require__(0);
-const constant_1 = __webpack_require__(1);
 class AbstractEnemies extends abstract_1.default {
-    // protected xDirection: number
     constructor(canvas, x = 0, y = 0) {
         super(canvas, x, y);
         this.attackPosition = { x, y };
@@ -17260,6 +17258,9 @@ class AbstractEnemies extends abstract_1.default {
         this.height = AbstractEnemies.HEIGHT;
         this.attackStepX = 2;
         this.attackSpeedY = 2;
+    }
+    get inAttack() {
+        return this.inFlyingAttack || this.inFinishingAttack;
     }
     setPosition(x, y) {
         if (this.inAttack) {
@@ -17284,44 +17285,27 @@ class AbstractEnemies extends abstract_1.default {
         this.attackPosition.y += y;
         return this;
     }
-    //
-    // tick() {
-    //     super.tick();
-    //
-    //     if (!this.inAttack) {
-    //         return;
-    //     }
-    //
-    //     this.y += this.attackSpeedY;
-    //
-    //     if (this.needChangeAttackDirection()) {
-    //         xDirection *= -1
-    //     }
-    //     this.x += xDirection;
-    //     if (this.y >= this.canvas.height) {
-    //
-    //         clearInterval(attackTimer);
-    //         this.finishAttack(cb);
-    //     }
-    // }
+    draw() {
+        super.draw();
+        return this;
+    }
+    tick() {
+        super.tick();
+        if (this.inFinishingAttack) {
+            this.finishAttack();
+        }
+        if (this.inFlyingAttack) {
+            this.flyingAttack();
+        }
+    }
     attack(cb) {
         if (this.inAttack) {
             cb();
             return;
         }
-        this.inAttack = true;
-        let xDirection = this.attackStepX;
-        let attackTimer = setInterval(() => {
-            this.y += this.attackSpeedY;
-            if (this.needChangeAttackDirection()) {
-                xDirection *= -1;
-            }
-            this.x += xDirection;
-            if (this.y >= this.canvas.height) {
-                clearInterval(attackTimer);
-                this.finishAttack(cb);
-            }
-        }, constant_1.TICK_TIME);
+        this.inFlyingAttack = true;
+        this.xDirection = this.attackStepX;
+        this.cb = cb;
     }
     isBulletCross(entity) {
         return false;
@@ -17331,33 +17315,42 @@ class AbstractEnemies extends abstract_1.default {
         let needX = lodash_1.random(0, 60) === 0;
         return isPositionInBorder || needX;
     }
-    finishAttack(cb) {
-        let x = this.x;
-        let y = this.height * -1;
-        this.x = x;
-        this.y = y;
-        let finishTimer = setInterval(() => {
-            let { x, y } = this;
-            let aX = this.attackPosition.x;
-            let aY = this.attackPosition.y;
-            let yDuration = aY - y;
-            let xDuration = aX - x;
-            if (yDuration === 0 && xDuration === 0) {
-                clearInterval(finishTimer);
-                this.inAttack = false;
-                cb();
-                return;
-            }
-            if (yDuration !== 0) {
-                this.y += 1;
-            }
-            if (xDuration > 0) {
-                this.x += 1;
-            }
-            else if (xDuration < 0) {
-                this.x -= 1;
-            }
-        }, 5);
+    flyingAttack() {
+        this.y += this.attackSpeedY;
+        if (this.needChangeAttackDirection()) {
+            this.xDirection *= -1;
+        }
+        this.x += this.xDirection;
+        if (this.y >= this.canvas.height) {
+            this.inFlyingAttack = false;
+            this.inFinishingAttack = true;
+            this.y = this.height * -1;
+        }
+    }
+    finishAttack() {
+        const FINISHING_STEP = 6;
+        let { x, y } = this;
+        let aX = this.attackPosition.x;
+        let aY = this.attackPosition.y;
+        let yDuration = aY - y;
+        let xDuration = aX - x;
+        if (yDuration < FINISHING_STEP && Math.abs(xDuration) < FINISHING_STEP) {
+            this.x = this.attackPosition.x;
+            this.y = this.attackPosition.y;
+            this.inFinishingAttack = false;
+            this.cb();
+            this.cb = null;
+            return;
+        }
+        if (yDuration !== 0) {
+            this.y += FINISHING_STEP;
+        }
+        if (xDuration > 0) {
+            this.x += FINISHING_STEP;
+        }
+        else if (xDuration < 0) {
+            this.x -= FINISHING_STEP;
+        }
     }
 }
 AbstractEnemies.WIDTH = 20;
@@ -17453,7 +17446,6 @@ class Bullet extends abstract_1.default {
     }
     draw() {
         super.draw();
-        console.log(`BULLET`, this.y);
         this.canvas.drawFillRound(this.getCenter(), 3, 'gold');
         return this;
     }
@@ -17543,6 +17535,7 @@ exports.start = function (canvasElement, keyboard) {
         lodash_1.remove(bullets, bullet);
         bullet.destroy();
     }
+    return tick;
 };
 exports.stop = function () {
     clearInterval(tickTimer);
@@ -17830,9 +17823,6 @@ class Enemies extends abstract_1.default {
     }
     draw() {
         super.draw();
-        for (let item of this.items) {
-            item.draw();
-        }
         return this;
     }
     tick() {
@@ -18058,13 +18048,7 @@ class SupperBoss extends abstract_1.default {
         if (!this.bullet) {
             return false;
         }
-        let isCross = this.bullet.isCross(entity);
-        console.log(this.bullet.x, this.bullet.y);
-        if (this.bullet.y > this.canvas.height - 100) {
-            console.log(`---------->>`, this.canvas.height);
-        }
-        console.log(`isCross`, isCross);
-        return isCross;
+        return this.bullet.isCross(entity);
     }
     destroy() {
         if (this.bullet) {
@@ -18201,13 +18185,15 @@ let bodyElement = document.getElementById('body');
 let keyboard;
 let startButton = document.getElementById('start');
 let stopButton = document.getElementById('stop');
+let tickButton = document.getElementById('tick');
 startButton
     .addEventListener('click', () => {
     keyboard = new keyboard_1.default(bodyElement);
-    app_1.start(canvasElement, keyboard);
+    let tick = app_1.start(canvasElement, keyboard);
     canvasElement.style.display = 'block';
     stopButton.style.display = 'inline';
     startButton.style.display = 'none';
+    tickButton.addEventListener('click', tick);
 });
 stopButton
     .addEventListener('click', () => {

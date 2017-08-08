@@ -7,16 +7,19 @@ let keyboard: Keyboard;
 
 let startButton = document.getElementById('start');
 let stopButton = document.getElementById('stop');
+let tickButton = document.getElementById('tick');
 
 
 startButton
     .addEventListener('click', () => {
         keyboard = new Keyboard(bodyElement);
-        start(canvasElement, keyboard);
+        let tick = start(canvasElement, keyboard);
         canvasElement.style.display = 'block';
 
         stopButton.style.display = 'inline';
         startButton.style.display = 'none';
+
+        tickButton.addEventListener('click', tick);
     });
 
 stopButton

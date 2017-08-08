@@ -22,9 +22,6 @@ class Enemies extends abstract_1.default {
     }
     draw() {
         super.draw();
-        for (let item of this.items) {
-            item.draw();
-        }
         return this;
     }
     tick() {

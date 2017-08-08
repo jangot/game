@@ -43,10 +43,6 @@ class Enemies extends AbstractEntity {
     draw() {
         super.draw();
 
-        for (let item of this.items) {
-            item.draw();
-        }
-
         return this;
     }
 

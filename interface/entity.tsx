@@ -5,6 +5,7 @@ interface Entity {
     y: number;
     width: number;
     height: number;
+    id: number;
     draw(): Entity;
     tick(): any;
     setPosition(x: number, y: number): Entity;
