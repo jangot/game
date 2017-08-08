@@ -62,7 +62,9 @@ class Enemies extends AbstractEntity {
                 remove(this.items, item);
 
                 item.destroy();
-
+                if (this.attackItem === item) {
+                    this.attackItem = null;
+                }
                 return true;
             }
         }

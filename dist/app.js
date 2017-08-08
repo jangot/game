@@ -19,7 +19,7 @@ exports.start = function (canvasElement, keyboard) {
     bullets = [];
     canvas = new canvas_1.default(canvasElement);
     let background = new background_1.default(canvas);
-    let player = new man_1.default(canvas, 1); //canvas.width / 2);
+    let player = new man_1.default(canvas, canvas.width / 2);
     let enemies = new enemies_1.default(canvas);
     keyboard
         .onKey(keyboard_1.default.KEY_LEFT, () => {
@@ -70,7 +70,6 @@ exports.start = function (canvasElement, keyboard) {
         lodash_1.remove(bullets, bullet);
         bullet.destroy();
     }
-    return tick;
 };
 exports.stop = function () {
     clearInterval(tickTimer);

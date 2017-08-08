@@ -7,7 +7,6 @@ import { TICK_TIME } from '../../../constant';
 
 class SupperBoss extends AbstractEnemies {
     protected bullet: Bullet;
-    protected bulletInterval: number;
 
     constructor(canvas: Canvas, x:number = 0, y:number = 0) {
         super(canvas, x, y);

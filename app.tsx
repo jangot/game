@@ -21,7 +21,7 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
     canvas = new Canvas(canvasElement);
 
     let background = new Background(canvas);
-    let player = new Man(canvas, 1);//canvas.width / 2);
+    let player = new Man(canvas, canvas.width / 2);
     let enemies = new Enemies(canvas);
 
     keyboard
@@ -82,8 +82,6 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
         remove(bullets, bullet);
         bullet.destroy();
     }
-
-    return tick;
 };
 
 export let stop = function () {

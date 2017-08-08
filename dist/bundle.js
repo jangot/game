@@ -17484,7 +17484,7 @@ exports.start = function (canvasElement, keyboard) {
     bullets = [];
     canvas = new canvas_1.default(canvasElement);
     let background = new background_1.default(canvas);
-    let player = new man_1.default(canvas, 1); //canvas.width / 2);
+    let player = new man_1.default(canvas, canvas.width / 2);
     let enemies = new enemies_1.default(canvas);
     keyboard
         .onKey(keyboard_1.default.KEY_LEFT, () => {
@@ -17535,7 +17535,6 @@ exports.start = function (canvasElement, keyboard) {
         lodash_1.remove(bullets, bullet);
         bullet.destroy();
     }
-    return tick;
 };
 exports.stop = function () {
     clearInterval(tickTimer);
@@ -17696,7 +17695,7 @@ class EnemiesFactory {
         this.line = 0;
         this.canvas = canvas;
         this.columns = Math.ceil(canvas.width / (abstract_1.default.WIDTH + EnemiesFactory.ENEMIES_MARGIN)) - 2;
-        this.lines = 1;
+        this.lines = 4;
     }
     [Symbol.iterator]() { return this; }
     ;
@@ -17838,6 +17837,9 @@ class Enemies extends abstract_1.default {
             if (item.isCross(entity)) {
                 lodash_1.remove(this.items, item);
                 item.destroy();
+                if (this.attackItem === item) {
+                    this.attackItem = null;
+                }
                 return true;
             }
         }
@@ -18185,15 +18187,15 @@ let bodyElement = document.getElementById('body');
 let keyboard;
 let startButton = document.getElementById('start');
 let stopButton = document.getElementById('stop');
-let tickButton = document.getElementById('tick');
+// let tickButton = document.getElementById('tick');
 startButton
     .addEventListener('click', () => {
     keyboard = new keyboard_1.default(bodyElement);
-    let tick = app_1.start(canvasElement, keyboard);
+    app_1.start(canvasElement, keyboard);
     canvasElement.style.display = 'block';
     stopButton.style.display = 'inline';
     startButton.style.display = 'none';
-    tickButton.addEventListener('click', tick);
+    // tickButton.addEventListener('click', tick);
 });
 stopButton
     .addEventListener('click', () => {

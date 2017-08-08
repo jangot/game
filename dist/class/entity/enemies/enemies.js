@@ -37,6 +37,9 @@ class Enemies extends abstract_1.default {
             if (item.isCross(entity)) {
                 lodash_1.remove(this.items, item);
                 item.destroy();
+                if (this.attackItem === item) {
+                    this.attackItem = null;
+                }
                 return true;
             }
         }
