@@ -18207,7 +18207,7 @@ let bodyElement = document.getElementById('body');
 let keyboard;
 let startButton = document.getElementById('start');
 let stopButton = document.getElementById('stop');
-let tickButton = document.getElementById('tick');
+// let tickButton = document.getElementById('tick');
 startButton
     .addEventListener('click', () => {
     keyboard = new keyboard_1.default(bodyElement);
@@ -18215,7 +18215,7 @@ startButton
     canvasElement.style.display = 'block';
     stopButton.style.display = 'inline';
     startButton.style.display = 'none';
-    tickButton.addEventListener('click', tick);
+    // tickButton.addEventListener('click', tick);
 });
 stopButton
     .addEventListener('click', () => {
