@@ -1,9 +1,6 @@
-import { concat } from 'lodash';
-
 import { DEBUG } from '../../constant';
 import Entity from '../../interface/entity';
 import isCross from '../../lib/isCross';
-import Сoordinate from '../../interface/coordinate';
 import Canvas from '../canvas';
 
 let id = 1;
@@ -14,6 +11,7 @@ class Abstract implements Entity {
     public height: number;
     public id: number;
 
+    protected marked: boolean;
     protected canvas: Canvas;
 
     constructor(canvas: Canvas, x:number = 0, y:number = 0) {
@@ -27,7 +25,7 @@ class Abstract implements Entity {
         this.height = 1;
     }
     draw():Entity {
-        if (DEBUG) {
+        if (DEBUG || this.marked) {
             this.drawDebug();
         }
 
@@ -35,6 +33,10 @@ class Abstract implements Entity {
     }
 
     tick() {}
+
+    mark(isMarck = true) {
+        this.marked = isMarck;
+    }
 
     setPosition(x: number, y: number):Entity {
         this.x = x;
@@ -69,7 +71,7 @@ class Abstract implements Entity {
             y: this.height
         };
 
-        this.canvas.drawStrokeRect(start, end, '#00ff00');
+        this.canvas.drawStrokeRect(start, end, 'yellow');
     }
 
     protected getCenter() {

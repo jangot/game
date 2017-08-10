@@ -14,12 +14,15 @@ class Abstract {
         this.height = 1;
     }
     draw() {
-        if (constant_1.DEBUG) {
+        if (constant_1.DEBUG || this.marked) {
             this.drawDebug();
         }
         return this;
     }
     tick() { }
+    mark(isMarck = true) {
+        this.marked = isMarck;
+    }
     setPosition(x, y) {
         this.x = x;
         this.y = y;
@@ -48,7 +51,7 @@ class Abstract {
             x: this.width,
             y: this.height
         };
-        this.canvas.drawStrokeRect(start, end, '#00ff00');
+        this.canvas.drawStrokeRect(start, end, 'yellow');
     }
     getCenter() {
         return {

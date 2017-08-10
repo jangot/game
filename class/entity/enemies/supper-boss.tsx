@@ -35,7 +35,7 @@ class SupperBoss extends AbstractEnemies {
         }
     }
     fire() {
-        let needFire = random(0, 100) === 0;
+        let needFire = random(0, 70) === 0;
 
         if (needFire) {
             let x = this.x + this.width / 2;

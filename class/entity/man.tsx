@@ -9,14 +9,13 @@ class Man extends AbstractEntity {
     constructor(canvas: Canvas, x:number = 100, y:number = 100) {
         super(canvas, x, y);
 
-        this.width = 28;
+        this.width = 24;
         this.height = 32;
 
         this.y = canvas.height - this.height;
     }
     draw() {
         super.draw();
-        this.drawDebug();
 
         this.canvas.drawImage('man', this, this);
 

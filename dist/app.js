@@ -62,7 +62,7 @@ exports.start = function (canvasElement, keyboard) {
         if (!enemies.inAttack()) {
             let time = attackSteps.shift() || 1;
             inAttack = true;
-            enemies.attack(time);
+            enemies.attack(time * 10);
         }
         canvas.draw();
     }
@@ -70,6 +70,7 @@ exports.start = function (canvasElement, keyboard) {
         lodash_1.remove(bullets, bullet);
         bullet.destroy();
     }
+    return tick;
 };
 exports.stop = function () {
     clearInterval(tickTimer);

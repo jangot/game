@@ -31,6 +31,17 @@ class Enemies extends abstract_1.default {
             this.steps = 1;
             this.moveAll();
         }
+        if (this.attackStarted || !this.attackItem) {
+            return;
+        }
+        this.attackWaiting--;
+        if (this.attackWaiting === 0) {
+            this.attackItem.attack(() => {
+                this.attackItem = null;
+                this.attackStarted = false;
+            });
+            this.attackStarted = true;
+        }
     }
     killIfCross(entity) {
         for (let item of this.items) {
@@ -46,12 +57,11 @@ class Enemies extends abstract_1.default {
         return false;
     }
     attack(time) {
+        if (time < 1)
+            time = 1;
         this.attackItem = this.getRandomItem();
-        setTimeout(() => {
-            this.attackItem.attack(() => {
-                this.attackItem = null;
-            });
-        }, time * 1000);
+        this.attackWaiting = time;
+        this.attackStarted = false;
     }
     inAttack() {
         return !!this.attackItem;
@@ -81,7 +91,7 @@ class Enemies extends abstract_1.default {
     }
     getRandomItem() {
         let last = this.items.length - 1;
-        let first = last - this.enemiesFactory.enemiesInLine;
+        let first = last - this.enemiesFactory.enemiesInLine * 2;
         if (first < 0)
             first = 0;
         let index = lodash_1.random(first, last);

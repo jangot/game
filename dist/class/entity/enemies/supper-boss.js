@@ -27,7 +27,7 @@ class SupperBoss extends abstract_1.default {
         }
     }
     fire() {
-        let needFire = lodash_1.random(0, 100) === 0;
+        let needFire = lodash_1.random(0, 70) === 0;
         if (needFire) {
             let x = this.x + this.width / 2;
             let y = this.y + this.height;

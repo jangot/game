@@ -29,6 +29,8 @@ class Enemies extends AbstractEntity {
 
     protected items: AbstractEnemies[];
     protected attackItem: AbstractEnemies;
+    protected attackStarted: boolean;
+    protected attackWaiting: number;
     protected direction: string = Enemies.RIGHT_DIRECTION;
 
     constructor(canvas:Canvas, x:number = 0, y:number = 0) {
@@ -55,6 +57,20 @@ class Enemies extends AbstractEntity {
             this.steps = 1;
             this.moveAll();
         }
+
+        if (this.attackStarted || !this.attackItem) {
+            return;
+
+        }
+
+        this.attackWaiting--;
+        if (this.attackWaiting === 0) {
+            this.attackItem.attack(() => {
+                this.attackItem = null;
+                this.attackStarted = false;
+            });
+            this.attackStarted = true;
+        }
     }
 
     killIfCross(entity: Entity): boolean {
@@ -73,13 +89,11 @@ class Enemies extends AbstractEntity {
     }
 
     attack(time: number) {
-        this.attackItem = this.getRandomItem();
+        if (time < 1) time = 1;
 
-        setTimeout(() => {
-            this.attackItem.attack(() => {
-                this.attackItem = null;
-            });
-        }, time * 1000)
+        this.attackItem = this.getRandomItem();
+        this.attackWaiting = time;
+        this.attackStarted = false;
     }
 
     inAttack(): boolean {
@@ -120,7 +134,7 @@ class Enemies extends AbstractEntity {
 
     protected getRandomItem(): AbstractEnemies {
         let last = this.items.length - 1;
-        let first = last - this.enemiesFactory.enemiesInLine;
+        let first = last - this.enemiesFactory.enemiesInLine * 2;
         if (first < 0) first = 0;
 
         let index = random(first, last);

@@ -72,7 +72,7 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
             let time = attackSteps.shift() || 1;
             inAttack = true;
 
-            enemies.attack(time);
+            enemies.attack(time * 10);
         }
 
         canvas.draw();
@@ -82,6 +82,8 @@ export let start = function (canvasElement: HTMLCanvasElement, keyboard: Keyboar
         remove(bullets, bullet);
         bullet.destroy();
     }
+
+    return tick;
 };
 
 export let stop = function () {
