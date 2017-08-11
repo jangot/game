@@ -27,7 +27,7 @@ class Enemies extends abstract_1.default {
     tick() {
         super.tick();
         this.steps++;
-        if (this.steps === 10) {
+        if (this.steps === 17) {
             this.steps = 1;
             this.moveAll();
         }

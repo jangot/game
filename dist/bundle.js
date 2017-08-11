@@ -17354,8 +17354,8 @@ exports.default = AbstractEnemies;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DEBUG = false;
 exports.TICK_TIME = 20;
-exports.CANVAS_WIDTH = 380;
-exports.CANVAS_HEIGHT = 550;
+exports.CANVAS_WIDTH = 400;
+exports.CANVAS_HEIGHT = 500;
 exports.ATTACK_STEPS = [
     20, 3, 2, 1
 ];
@@ -17834,7 +17834,7 @@ class Enemies extends abstract_1.default {
     tick() {
         super.tick();
         this.steps++;
-        if (this.steps === 10) {
+        if (this.steps === 17) {
             this.steps = 1;
             this.moveAll();
         }

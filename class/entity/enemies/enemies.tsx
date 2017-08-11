@@ -53,7 +53,7 @@ class Enemies extends AbstractEntity {
         super.tick();
 
         this.steps++;
-        if (this.steps === 10) {
+        if (this.steps === 17) {
             this.steps = 1;
             this.moveAll();
         }
